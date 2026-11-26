@@ -1,0 +1,70 @@
+---
+import { inicio, paginas, sitio } from "@/lib/textos";
+import Base from "@/layouts/Base.astro";
+import Carrusel from "@/components/home/Carrusel.astro";
+import Credenciales from "@/components/home/Credenciales.astro";
+import Contacto from "@/components/home/Contacto.astro";
+import ObrasDestacadas from "@/components/home/ObrasDestacadas.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import GrillaFotos from "@/components/ui/GrillaFotos.astro";
+import ServiciosApilados from "@/components/home/ServiciosApilados.astro";
+import { obrasParaMostrar } from "@/lib/obras";
+import { empresa } from "@/data/empresa";
+import { getCollection } from "astro:content";
+import { getImage } from "astro:assets";
+import posterVideo from "@/assets/hero/poster.jpg";
+import experiencia from "@/assets/temas/experiencia.jpg";
+import compromiso from "@/assets/temas/compromiso.jpg";
+import sustentabilidad from "@/assets/temas/sustentabilidad.jpg";
+import { grafo, organizacion, persona, sitioWeb } from "@/lib/schema";
+
+const servicios = (await getCollection("servicios")).sort((a, b) => a.data.orden - b.data.orden);
+const grillaInstitucional = [
+  { href: "/experiencia/", foto: experiencia, k: "sitio.menu.experiencia", titulo: sitio.menu.experiencia },
+  { href: "/compromiso/", foto: compromiso, k: "sitio.menu.compromiso", titulo: sitio.menu.compromiso },
+  { href: "/sustentabilidad/", foto: sustentabilidad, k: "sitio.menu.sustentabilidad", titulo: sitio.menu.sustentabilidad },
+];
+const obras = await obrasParaMostrar();
+const site = Astro.site!;
+// Precarga del primer cuadro del video de la portada (elemento LCP): misma imagen que usa como poster.
+// WebP y no AVIF: en celulares lentos se decodifica más rápido y la primera imagen aparece antes.
+const lcp = await getImage({ src: posterVideo, format: "webp", widths: [640, 960, 1280, 1920], quality: 72 });
+const schema = grafo([organizacion(site, servicios.map((s) => s.data.titulo)), persona(site), sitioWeb(site)]);
+---
+
+<Base
+  cabeceraSobreImagen
+  titulo={empresa.nombre}
+  imagen="/og/inicio.png"
+  descripcion={inicio.descripcionGoogle}
+  schema={schema}
+>
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    type="image/webp"
+    imagesrcset={lcp.srcSet.attribute}
+    imagesizes="100vw"
+    fetchpriority="high"
+  />
+  <Carrusel />
+  <Credenciales />
+  <section aria-labelledby="ini-servicios">
+    <div class="contenedor ini-serv-cab">
+      <CabSeccion id="ini-servicios" titulo={inicio.grillaServicios.titulo} bajada={paginas.servicios.bajada} tk="inicio.grillaServicios.titulo" bk="paginas.servicios.bajada" centrada />
+    </div>
+    <ServiciosApilados />
+  </section>
+  <section class="contenedor ini-inst" aria-labelledby="ini-institucional">
+    <CabSeccion id="ini-institucional" titulo={inicio.grillaInstitucional.titulo} tk="inicio.grillaInstitucional.titulo" centrada />
+    <GrillaFotos items={grillaInstitucional} />
+  </section>
+  <ObrasDestacadas obras={obras.obras} base={obras.base} ejemplo={obras.ejemplo} />
+  <Contacto />
+</Base>
+
+<style>
+  .ini-serv-cab { padding-top: var(--seccion); }
+  .ini-inst { padding-block: var(--seccion); }
+</style>

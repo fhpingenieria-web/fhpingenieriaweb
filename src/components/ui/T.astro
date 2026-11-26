@@ -1,0 +1,15 @@
+---
+/**
+ * Texto editable en la web. Cada texto lleva una clave (data-t) y su valor de base.
+ * En línea, la función de borde (netlify/edge-functions/textos.ts) reemplaza el valor por el editado, si existe;
+ * con ?editar=<clave> el texto se vuelve editable y se guarda solo (src/scripts/editor.ts).
+ */
+interface Props {
+  /** Clave única y estable, p. ej. "inicio.hero.titular" o "servicios.control-documental.resumen" */
+  k: string;
+  v: string;
+}
+const { k, v } = Astro.props;
+---
+
+<span data-t={k}>{v}</span>

@@ -1,0 +1,13 @@
+---
+import { paginas } from "@/lib/textos";
+import Base from "@/layouts/Base.astro";
+import Migas from "@/components/layout/Migas.astro";
+import Contacto from "@/components/home/Contacto.astro";
+---
+
+<Base titulo="Contacto" imagen="/og/contacto.png" descripcion={paginas.contacto.descripcionGoogle}>
+  <div class="contenedor pagina-migas">
+    <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: "Contacto" }]} />
+  </div>
+  <Contacto nivel="h1" />
+</Base>

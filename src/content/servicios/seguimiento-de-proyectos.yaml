@@ -1,0 +1,30 @@
+titulo: Seguimiento de Proyectos
+nombreCorto: Seguimiento de proyectos
+orden: 4
+etapa: durante
+resumen: Seguimiento de cronogramas y entregables, coordinación de actores y registro de compromisos, avances y pendientes.
+definicion: >-
+  El seguimiento de proyectos es el control ordenado del avance respecto de lo planificado. FHP ingeniería sigue cronogramas y entregables, coordina a los distintos actores y registra compromisos, avances y pendientes, para que los desvíos se identifiquen a tiempo y cada parte sepa qué le corresponde.
+metaDescripcion: Seguimiento de proyectos industriales y de infraestructura. Cronogramas, entregables, coordinación de actores y registro de compromisos y pendientes.
+incluye:
+  - Seguimiento de cronogramas
+  - Control de entregables
+  - Coordinación entre los actores del proyecto
+  - Registro de compromisos, avances y pendientes
+situaciones:
+  - Cuando intervienen varios contratistas o áreas y nadie consolida el estado real.
+  - Cuando los compromisos de las reuniones no se registran ni se siguen.
+  - Cuando necesitás identificar desvíos de plazo antes de que impacten.
+entregables:
+  aConfirmar: true
+  items:
+    - Registro de compromisos y pendientes
+    - Informes de avance
+faq:
+  - pregunta: ¿El seguimiento es lo mismo que la dirección del proyecto?
+    respuesta: >-
+      No. El seguimiento controla y registra el avance, los compromisos y los pendientes, y facilita la coordinación entre los actores. Las decisiones de dirección siguen a cargo de quien corresponda según el contrato.
+  - pregunta: ¿Qué se considera un desvío?
+    respuesta: >-
+      Toda diferencia entre lo previsto y lo real: en plazos, entregables, alcance o calidad. Identificarlo a tiempo permite corregirlo antes de que comprometa el resultado.
+actualizado: 2026-10-22

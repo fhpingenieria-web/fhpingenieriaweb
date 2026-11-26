@@ -1,0 +1,53 @@
+---
+import T from "@/components/ui/T.astro";
+import { inicio } from "@/lib/textos";
+/**
+ * Bloque "Obras" del inicio. Solo se muestra si hay obras publicadas.
+ */
+import BandaCurva from "@/components/obras/BandaCurva.astro";
+import Icon from "@/components/ui/Icon.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import type { ObraVista } from "@/lib/obras";
+
+interface Props {
+  obras: ObraVista[];
+  base?: string;
+  /** Contenido de ejemplo (solo en desarrollo). */
+  ejemplo?: boolean;
+}
+const { obras, base = "/obras/", ejemplo = false } = Astro.props;
+---
+
+{
+  obras.length > 0 && (
+    <section class="od-home" id="obras" aria-labelledby="obras-titulo">
+      <div class="contenedor">
+        <CabSeccion
+          id="obras-titulo"
+          titulo={inicio.obras.titulo}
+          bajada={inicio.obras.bajada}
+          tk="inicio.obras.titulo"
+          bk="inicio.obras.bajada"
+          class="od-home-cab"
+        >
+          {ejemplo && <p class="od-home-aviso">Vista previa con contenido de ejemplo. Solo se ve en desarrollo: en el sitio publicado aparece cuando haya obras reales cargadas.</p>}
+        </CabSeccion>
+      </div>
+      <BandaCurva fotos={obras.map((o) => o.portada)} class="od-home-banda" />
+      <div class="contenedor od-home-pie">
+        <a class="btn" href={base}>
+          <T k="inicio.obras.boton" v={inicio.obras.boton} /> <Icon name="arrow-right" size={18} />
+        </a>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .od-home { padding-block: var(--seccion); }
+  .od-home :global(.od-home-cab) { margin-bottom: var(--s-6); }
+  .od-home :global(.od-home-banda) { height: clamp(260px, 38vw, 520px); }
+
+  .od-home-pie { margin-top: var(--s-6); }
+  .od-home-aviso { font-size: 0.875rem; font-weight: 600; color: var(--senal-texto); }
+</style>

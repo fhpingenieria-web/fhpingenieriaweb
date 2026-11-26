@@ -1,0 +1,84 @@
+---
+import T from "@/components/ui/T.astro";
+import { getCollection } from "astro:content";
+import { inicio } from "@/lib/textos";
+import Icon from "@/components/ui/Icon.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+
+
+// Situaciones genéricas de cualquier proyecto. No son casos ni resultados de FHP.
+// El texto se edita en src/content/textos/inicio.yaml; el enlace sale del servicio elegido.
+const servicios = await getCollection("servicios");
+const filas = inicio.situaciones.filas.flatMap((f, i) => {
+  const sv = servicios.find((x) => x.id === f.servicio);
+  return sv ? [{ i, s: f.texto, servicio: f.enlace, href: `/servicios/${sv.id}/` }] : [];
+});
+---
+
+<section class="sit contenedor seccion" aria-labelledby="sit-titulo">
+  <div class="sit-cab">
+    <CabSeccion
+      id="sit-titulo"
+      titulo={inicio.situaciones.titulo}
+      bajada={inicio.situaciones.bajada}
+      tk="inicio.situaciones.titulo"
+      bk="inicio.situaciones.bajada"
+    />
+  </div>
+
+  <ul role="list" class="sit-lista" aria-label="Situaciones y servicios">
+    {
+      filas.map((f) => (
+        <li class="sit-fila">
+          <p class="sit-s"><T k={`inicio.situaciones.filas.${f.i}.texto`} v={f.s} /></p>
+          <a class="sit-servicio" href={f.href}>
+            <T k={`inicio.situaciones.filas.${f.i}.enlace`} v={f.servicio} /> <Icon name="arrow-right" size={16} />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .sit { display: grid; gap: var(--s-6); align-items: start; }
+  /* El espacio entre título y lista lo da la grilla (sin sumar el margen de la cabecera) */
+  .sit-cab :global(.cab) { margin-bottom: 0; }
+  .sit-lista { border-top: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .sit-fila {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: var(--s-3);
+    justify-items: start;
+    padding: var(--s-5) 0;
+  }
+  .sit-fila { border-bottom: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .sit-s { font-size: var(--t-1); font-weight: 450; line-height: 1.35; letter-spacing: -0.01em; max-width: 36ch; }
+  .sit-servicio {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: var(--r-pastilla);
+    background: rgb(255 255 255 / 0.7);
+    box-shadow: inset 0 0 0 1px rgb(14 18 21 / 0.07);
+    font-size: var(--t-small);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out);
+  }
+  .sit-servicio :global(.icon) { color: var(--senal-texto); }
+  .sit-servicio:hover { background: var(--senal); color: var(--tinta); }
+  .sit-servicio:hover :global(.icon) { color: var(--tinta); }
+
+  @media (min-width: 1024px) {
+    .sit { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--col-gap); }
+    .sit-cab { position: sticky; top: calc(var(--header-h) + var(--s-6)); }
+    .sit-fila { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s-6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sit-servicio { transition: none; }
+  }
+</style>

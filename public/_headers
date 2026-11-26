@@ -1,0 +1,13 @@
+# Caché en el navegador (Netlify / Cloudflare Pages leen este archivo).
+# Los archivos de /_astro llevan huella en el nombre: si cambian, cambia la URL.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/video/*
+  Cache-Control: public, max-age=2592000
+
+/og/*
+  Cache-Control: public, max-age=604800
+
+/marca/*
+  Cache-Control: public, max-age=604800

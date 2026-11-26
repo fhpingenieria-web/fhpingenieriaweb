@@ -1,0 +1,101 @@
+---
+import T from "@/components/ui/T.astro";
+import { sitio, inicio } from "@/lib/textos";
+import Logo from "@/components/brand/Logo.astro";
+import Icon from "@/components/ui/Icon.astro";
+import AConfirmar from "@/components/ui/AConfirmar.astro";
+import { empresa } from "@/data/empresa";
+import { whatsappUrl, telUrl, telefonoVisible, emailUrl, emailVisible } from "@/lib/contacto";
+import { getCollection } from "astro:content";
+
+const servicios = (await getCollection("servicios")).sort((a, b) => a.data.orden - b.data.orden);
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="contenedor">
+   <div class="pie-panel">
+    <div class="pie-grilla grilla">
+      <div class="pie-marca">
+        <Logo alto={58} descriptor />
+        <p><T k="sitio.firma" v={sitio.firma} /></p>
+      </div>
+
+      <div class="pie-col pie-dir">
+        <span class="t-label"><T k="sitio.pie.direccionTecnica" v={sitio.pie.direccionTecnica} /></span>
+        <p class="pie-dato"><T k="inicio.direccionTecnica.nombre" v={inicio.direccionTecnica.nombre} /></p>
+        <span class="t-label pie-sub"><T k="sitio.pie.ambito" v={sitio.pie.ambito} /></span>
+        <p class="pie-dato"><T k="sitio.ambito" v={sitio.ambito} /></p>
+      </div>
+
+      <div class="pie-col pie-con">
+        <span class="t-label"><T k="sitio.pie.contacto" v={sitio.pie.contacto} /></span>
+        <ul role="list" class="pie-canales">
+          <li><a href={whatsappUrl()} target="_blank" rel="noopener"><Icon name="whatsapp" /> WhatsApp</a></li>
+          <li><a href={telUrl}><Icon name="phone" /> {telefonoVisible}</a></li>
+          <li>
+            <AConfirmar as="span" nota="Email provisorio">
+              <a href={emailUrl}><Icon name="envelope" /> {emailVisible}</a>
+            </AConfirmar>
+          </li>
+        </ul>
+      </div>
+
+      <nav class="pie-col pie-serv" aria-label="Servicios en el pie de página">
+        <span class="t-label"><T k="sitio.pie.servicios" v={sitio.pie.servicios} /></span>
+        <ul role="list">
+          {servicios.map((s) => <li><a href={`/servicios/${s.id}/`}><T k={`servicios.${s.id}.titulo`} v={s.data.titulo} /></a></li>)}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="pie-legal grilla">
+      <p>© {anio} {empresa.copyright}</p>
+      <ul role="list">
+        <li><a href="/privacidad/"><T k="sitio.pie.privacidad" v={sitio.pie.privacidad} /></a></li>
+        <li><a href="/privacidad/#imagenes"><T k="sitio.pie.creditos" v={sitio.pie.creditos} /></a></li>
+        <li><a href="https://www.flaticon.com/uicons" target="_blank" rel="noopener">Uicons by Flaticon</a></li>
+      </ul>
+    </div>
+   </div>
+  </div>
+</footer>
+
+<style>
+  .pie { padding-block: var(--s-8) var(--s-5); }
+  .pie-panel { padding-top: var(--s-6); border-top: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .pie-panel > * { position: relative; z-index: 2; }
+  .pie-grilla { row-gap: var(--s-7); }
+  .pie-marca { display: grid; gap: var(--s-4); align-content: start; color: var(--tinta); }
+  .pie-marca p { color: var(--grafito); font-size: var(--t-small); max-width: 22ch; }
+  .pie-col { display: grid; gap: var(--s-3); align-content: start; }
+  .pie-col .t-label { color: var(--grafito); }
+  .pie-sub { margin-top: var(--s-4); }
+  .pie-dato { font-weight: 560; }
+  .pie a { text-decoration: none; }
+  .pie a:hover { text-decoration: underline; text-decoration-color: var(--senal); }
+  .pie-canales { display: grid; gap: var(--s-1); }
+  .pie-canales a { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 32px; }
+  .pie-serv li a { display: inline-block; padding-block: var(--s-1); }
+
+  .pie-legal { margin-top: var(--s-8); padding-top: var(--s-4); border-top: var(--filete) solid rgb(14 18 21 / 0.08); row-gap: var(--s-3); font-size: var(--t-label); color: var(--grafito); }
+  .pie-legal ul { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+  .pie-legal a { display: inline-block; min-height: 24px; }
+
+  @media (min-width: 768px) {
+    .pie-marca { grid-column: 1 / 4; }
+    .pie-dir { grid-column: 4 / 8; }
+    .pie-con { grid-column: 8 / -1; }
+    .pie-serv { grid-column: 4 / -1; }
+    .pie-legal p { grid-column: 1 / 4; }
+    .pie-legal ul { grid-column: 4 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .pie-marca { grid-column: 1 / 3; }
+    .pie-dir { grid-column: 3 / 6; }
+    .pie-con { grid-column: 6 / 9; }
+    .pie-serv { grid-column: 9 / -1; }
+    .pie-legal p { grid-column: 1 / 6; }
+    .pie-legal ul { grid-column: 6 / -1; }
+  }
+</style>

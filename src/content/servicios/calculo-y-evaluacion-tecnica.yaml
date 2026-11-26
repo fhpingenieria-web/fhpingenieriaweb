@@ -1,0 +1,26 @@
+titulo: Cálculo y Evaluación Técnica
+nombreCorto: Cálculo y evaluación
+orden: 2
+etapa: antes
+resumen: Análisis, cálculos y revisión técnica según la especialidad, la documentación disponible y el alcance acordado.
+definicion: >-
+  El cálculo y la evaluación técnica permiten verificar con fundamento si una solución responde a lo que el proyecto necesita. FHP ingeniería realiza el análisis, cálculos y revisiones técnicas de acuerdo con la especialidad solicitada, entregando toda la documentación respaldatoria sobre los mismos y el alcance acordado con cada cliente.
+metaDescripcion: Cálculo y evaluación técnica para proyectos industriales y de infraestructura. Análisis, cálculos y revisión técnica de documentación.
+incluye:
+  - Análisis técnico
+  - Cálculos según la especialidad (mecánica, eléctrica y civil)
+  - Revisión técnica de la documentación existente
+situaciones:
+  - Cuando necesitás verificar un diseño o una modificación.
+  - Cuando hay documentación técnica que necesita una segunda revisión.
+  - Cuando una decisión depende de un cálculo que todavía nadie validó.
+entregables:
+  aConfirmar: true
+  items:
+    - Memoria de cálculo
+    - Informe de revisión técnica
+faq:
+  - pregunta: ¿De qué depende el alcance de una evaluación técnica?
+    respuesta: >-
+      De tres factores: la especialidad involucrada, la documentación disponible y el alcance que se acuerde con el cliente. Por eso cada evaluación se define caso por caso, antes de empezar.
+actualizado: 2026-10-22

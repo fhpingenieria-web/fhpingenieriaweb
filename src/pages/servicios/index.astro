@@ -1,0 +1,113 @@
+---
+import T from "@/components/ui/T.astro";
+import { paginas } from "@/lib/textos";
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { getCollection } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import Migas from "@/components/layout/Migas.astro";
+import Icon from "@/components/ui/Icon.astro";
+import Contacto from "@/components/home/Contacto.astro";
+import Situaciones from "@/components/home/Situaciones.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import { creditosServicios } from "@/data/creditos";
+import { grafo, migas } from "@/lib/schema";
+
+const servicios = (await getCollection("servicios")).sort((a, b) => a.data.orden - b.data.orden);
+const fotos = import.meta.glob<{ default: ImageMetadata }>("/src/assets/servicios/*.jpg", { eager: true });
+const site = Astro.site!;
+const schema = grafo([
+  migas([
+    { nombre: "Inicio", url: new URL("/", site).href },
+    { nombre: "Servicios", url: new URL("/servicios/", site).href },
+  ]),
+  {
+    "@type": "ItemList",
+    itemListElement: servicios.map((s, i) => ({ "@type": "ListItem", position: i + 1, name: s.data.titulo, url: new URL(`/servicios/${s.id}/`, site).href })),
+  },
+]);
+---
+
+<Base
+  titulo={paginas.servicios.tituloGoogle}
+  imagen="/og/servicios.png"
+  descripcion={paginas.servicios.descripcionGoogle}
+  schema={schema}
+>
+  <div class="contenedor pagina-migas">
+    <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: paginas.servicios.titulo }]} />
+  </div>
+  <div class="contenedor si-cab">
+    <CabSeccion
+      nivel="h1"
+      id="si-titulo"
+      titulo={paginas.servicios.titulo}
+      bajada={paginas.servicios.bajada}
+      tk="paginas.servicios.titulo"
+      bk="paginas.servicios.bajada"
+    />
+  </div>
+
+  <section class="si-lista contenedor" aria-labelledby="si-titulo">
+    <ul role="list" class="si-grilla">
+      {
+        servicios.map((s, i) => (
+          <li class:list={["si-celda", `si-celda-${i}`]}>
+            <a class="si-item" href={`/servicios/${s.id}/`}>
+              <Picture class="si-foto" src={fotos[`/src/assets/servicios/${s.id}.jpg`]!.default} alt={creditosServicios[s.id]!.descripcion} formats={["avif", "webp"]} widths={[480, 720, 960, 1400]} sizes={i < 2 ? "(min-width: 1024px) 48vw, 100vw" : "(min-width: 1024px) 32vw, 100vw"} loading={i < 2 ? "eager" : "lazy"} />
+              <span class="si-texto vidrio vidrio--denso">
+                <span class="si-nombre"><T k={`servicios.${s.id}.titulo`} v={s.data.titulo} /> <Icon name="arrow-up-right" size={22} /></span>
+                <span class="si-resumen"><T k={`servicios.${s.id}.resumen`} v={s.data.resumen} /></span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <Situaciones />
+
+  <Contacto />
+</Base>
+
+<style>
+  .si-cab { padding-top: var(--s-6); }
+  .si-lista { padding-bottom: var(--seccion); }
+  .si-grilla { display: grid; gap: var(--col-gap); }
+  .si-item {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: end;
+    min-height: 440px;
+    height: 100%;
+    padding: 12px;
+    border-radius: var(--r-panel);
+    background: var(--linea);
+    text-decoration: none;
+  }
+  .si-item :global(img.si-foto) { filter: var(--foto-filtro); position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+  .si-item:hover :global(img.si-foto) { transform: scale(1.04); }
+  .si-texto { display: grid; gap: var(--s-2); padding: var(--s-5); border-radius: calc(var(--r-panel) - 12px); }
+  .si-texto > * { position: relative; z-index: 2; }
+  .si-nombre { display: flex; justify-content: space-between; align-items: start; gap: var(--s-4); font-size: var(--t-2); font-weight: 520; letter-spacing: -0.02em; line-height: 1.1; }
+  .si-nombre :global(.icon) { flex: none; color: var(--senal-texto); transition: transform var(--dur-2) var(--ease-out); }
+  .si-item:hover .si-nombre :global(.icon) { transform: translate(3px, -3px); }
+  .si-resumen { color: var(--grafito); max-width: 46ch; }
+
+  @media (min-width: 768px) {
+    .si-grilla { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .si-celda-4 { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .si-grilla { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .si-celda-0, .si-celda-1 { grid-column: span 3; }
+    .si-celda-0 .si-item, .si-celda-1 .si-item { min-height: 560px; }
+    .si-celda-2, .si-celda-3, .si-celda-4 { grid-column: span 2; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .si-item :global(img.si-foto), .si-nombre :global(.icon) { transition: none; }
+  }
+</style>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  items: { nombre: string; href?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="migas" aria-label="Ruta de navegación">
+  <ol role="list">
+    {
+      items.map((it, i) => (
+        <li>
+          {it.href && i < items.length - 1 ? <a href={it.href}>{it.nombre}</a> : <span aria-current="page">{it.nombre}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .migas ol { display: flex; flex-wrap: wrap; gap: 6px; font-size: var(--t-label); color: var(--grafito); }
+  .migas li:not(:last-child)::after { content: "/"; margin-left: 6px; color: var(--linea); }
+  .migas a { text-decoration: none; }
+  .migas a:hover { text-decoration: underline; text-decoration-color: var(--senal); }
+  .migas [aria-current] { color: var(--tinta); }
+</style>

@@ -1,0 +1,73 @@
+# Sectores objetivo. Descripciones de la fuente; en Industria, "gestión documental"
+# pasa a "control documental" para coincidir con el nombre del servicio.
+# Los antecedentes por sector se agregan cuando haya información verificada.
+# Cada bloque es un elemento (la clave de arriba es su identificador: no cambiarla).
+energia:
+  nombre: Oil & Gas y Energía
+  nombreCorto: Oil & Gas
+  ruta: oil-gas-y-energia
+  orden: 1
+  descripcion: Ingeniería, seguimiento y soporte técnico para proyectos y entornos energéticos.
+  metaDescripcion: Ingeniería, inspección, seguimiento y soporte técnico para proyectos de Oil & Gas y energía en Argentina y el Mercosur.
+  introduccion: Los proyectos de Oil & Gas y energía requieren decisiones técnicas respaldadas, coordinación entre especialidades y un registro claro de lo revisado. FHP acompaña cada trabajo con una mirada integral, adaptada a la etapa y al alcance acordado.
+  necesidades:
+    - Revisar información técnica, criterios de diseño y documentación antes de avanzar.
+    - Verificar equipos, trabajos y entregables respecto de los requisitos aplicables.
+    - Mantener trazabilidad sobre observaciones, versiones, compromisos y pendientes.
+  acompanamiento:
+    - Análisis de necesidades y evaluación de alternativas técnicas.
+    - Inspección y seguimiento con registros claros de lo observado.
+    - Organización y control de la documentación durante el desarrollo del proyecto.
+  servicios:
+    - consultoria-de-ingenieria
+    - calculo-y-evaluacion-tecnica
+    - inspeccion-tecnica-de-obras
+    - seguimiento-de-proyectos
+    - control-documental
+  imagen: energia
+industria:
+  nombre: Industria
+  nombreCorto: Industria
+  ruta: industria
+  orden: 2
+  descripcion: Asistencia técnica, inspección y control documental en instalaciones industriales.
+  metaDescripcion: Asistencia técnica, inspección, cálculo, seguimiento y control documental para instalaciones y proyectos industriales.
+  introduccion: En una instalación industrial, las decisiones de ingeniería conviven con condiciones de operación, mantenimiento, seguridad y plazos de ejecución. FHP aporta soporte técnico para ordenar la información y acompañar el trabajo desde la definición inicial hasta el cierre.
+  necesidades:
+    - Comprender el estado de una instalación y reunir la información necesaria para intervenir.
+    - Evaluar soluciones y verificar su correspondencia con el alcance y los requisitos acordados.
+    - Coordinar tareas, documentar avances y detectar desvíos antes de que afecten el resultado.
+  acompanamiento:
+    - Consultoría, relevamiento, cálculo y evaluación técnica.
+    - Inspección de equipos y seguimiento de trabajos industriales.
+    - Control de planos, entregables, versiones, observaciones y registros de cierre.
+  servicios:
+    - consultoria-de-ingenieria
+    - calculo-y-evaluacion-tecnica
+    - inspeccion-tecnica-de-obras
+    - seguimiento-de-proyectos
+    - control-documental
+  imagen: industria
+infraestructura:
+  nombre: Agua, Saneamiento e Infraestructura
+  nombreCorto: Agua y saneamiento
+  ruta: agua-saneamiento-e-infraestructura
+  orden: 3
+  descripcion: Soporte técnico para proyectos de infraestructura y del sector de agua y saneamiento.
+  metaDescripcion: Ingeniería, inspección, seguimiento y control documental para proyectos de agua, saneamiento e infraestructura.
+  introduccion: Los proyectos de agua, saneamiento e infraestructura suelen integrar distintas especialidades, etapas y actores. FHP brinda soporte técnico para ordenar el alcance, revisar la información disponible y sostener la trazabilidad desde el inicio hasta la entrega.
+  necesidades:
+    - Definir con claridad tareas, responsabilidades y entregables entre los participantes.
+    - Revisar documentación técnica y registrar observaciones de manera ordenada.
+    - Dar seguimiento a cronogramas, compromisos y pendientes durante la ejecución.
+  acompanamiento:
+    - Evaluación técnica y apoyo en la definición del alcance.
+    - Inspección y seguimiento de trabajos conforme a la documentación acordada.
+    - Control documental para conservar versiones vigentes y registros de cierre trazables.
+  servicios:
+    - consultoria-de-ingenieria
+    - calculo-y-evaluacion-tecnica
+    - inspeccion-tecnica-de-obras
+    - seguimiento-de-proyectos
+    - control-documental
+  imagen: agua

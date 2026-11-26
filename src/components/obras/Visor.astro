@@ -1,0 +1,78 @@
+---
+/**
+ * Visor de fotos a pantalla completa con <dialog> nativo: foco, Escape y fondo inerte los resuelve el navegador.
+ * Se abre desde cualquier botón con data-abrir="<índice>".
+ */
+import Icon from "@/components/ui/Icon.astro";
+
+interface Props {
+  fotos: { src: string; alt: string; pie: string }[];
+}
+const { fotos } = Astro.props;
+---
+
+<dialog class="visor" data-visor aria-label="Visor de fotos" data-fotos={JSON.stringify(fotos)}>
+  <figure class="visor-figura">
+    <img data-visor-img alt="" />
+    <figcaption><span data-visor-pie></span><span class="visor-n" data-visor-n></span></figcaption>
+  </figure>
+  <button type="button" class="visor-btn visor-cerrar" data-visor-cerrar aria-label="Cerrar visor"><Icon name="x" size={26} /></button>
+  <button type="button" class="visor-btn visor-ant" data-visor-ant aria-label="Foto anterior"><Icon name="arrow-left" size={26} /></button>
+  <button type="button" class="visor-btn visor-sig" data-visor-sig aria-label="Foto siguiente"><Icon name="arrow-right" size={26} /></button>
+</dialog>
+
+<script>
+  const visor = document.querySelector<HTMLDialogElement>("[data-visor]");
+  if (visor) {
+    const fotos = JSON.parse(visor.dataset.fotos!) as { src: string; alt: string; pie: string }[];
+    const img = visor.querySelector<HTMLImageElement>("[data-visor-img]")!;
+    const pie = visor.querySelector<HTMLElement>("[data-visor-pie]")!;
+    const n = visor.querySelector<HTMLElement>("[data-visor-n]")!;
+    let actual = 0;
+    let origen: HTMLElement | null = null;
+    const mostrar = (i: number) => {
+      actual = (i + fotos.length) % fotos.length;
+      const f = fotos[actual]!;
+      img.src = f.src;
+      img.alt = f.alt;
+      pie.textContent = f.pie || f.alt;
+      n.textContent = `${actual + 1} de ${fotos.length}`;
+    };
+    document.querySelectorAll<HTMLButtonElement>("[data-abrir]").forEach((b) =>
+      b.addEventListener("click", () => {
+        origen = b;
+        mostrar(Number(b.dataset.abrir));
+        visor.showModal();
+      }),
+    );
+    // Al cerrar, el foco vuelve a la foto que abrió el visor.
+    visor.addEventListener("close", () => origen?.focus());
+    visor.querySelector("[data-visor-cerrar]")!.addEventListener("click", () => visor.close());
+    visor.querySelector("[data-visor-ant]")!.addEventListener("click", () => mostrar(actual - 1));
+    visor.querySelector("[data-visor-sig]")!.addEventListener("click", () => mostrar(actual + 1));
+    visor.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") mostrar(actual - 1);
+      if (e.key === "ArrowRight") mostrar(actual + 1);
+    });
+    visor.addEventListener("click", (e) => e.target === visor && visor.close());
+    if (fotos.length < 2) visor.querySelectorAll<HTMLElement>("[data-visor-ant],[data-visor-sig]").forEach((b) => (b.hidden = true));
+  }
+</script>
+
+<style>
+  .visor { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: clamp(16px, 4vw, 56px); border: 0; background: var(--velo); color: var(--sobre-tinta); }
+  .visor::backdrop { background: transparent; }
+  .visor[open] { display: grid; place-items: center; }
+  .visor-figura { margin: 0; display: grid; gap: 12px; max-width: min(1600px, 100%); }
+  .visor-figura img { max-width: 100%; max-height: calc(100dvh - 140px); object-fit: contain; }
+  .visor-figura figcaption { display: flex; justify-content: space-between; gap: var(--s-5); font-size: 0.9375rem; color: var(--sobre-tinta-2); }
+  .visor-n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .visor-btn { position: fixed; width: 52px; height: 52px; display: grid; place-items: center; color: var(--sobre-tinta); background: var(--velo-control); border: 1px solid color-mix(in srgb, var(--sobre-tinta) 25%, transparent); }
+  .visor-btn:hover { background: var(--senal); color: var(--tinta); border-color: var(--senal); }
+  .visor-cerrar { top: 16px; right: 16px; }
+  .visor-ant { left: 16px; top: 50%; translate: 0 -50%; }
+  .visor-sig { right: 16px; top: 50%; translate: 0 -50%; }
+  @media (max-width: 520px) {
+    .visor-ant, .visor-sig { top: auto; bottom: 16px; translate: none; }
+  }
+</style>

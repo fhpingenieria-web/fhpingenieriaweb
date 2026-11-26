@@ -1,0 +1,36 @@
+---
+import T from "@/components/ui/T.astro";
+/**
+ * Cabecera de sección: titular y bajada, sin rótulos ni numeración.
+ * `centrada` para cierres y bloques sobre fotografía.
+ */
+interface Props {
+  titulo: string;
+  bajada?: string;
+  /** Claves para editar en la web (ver T.astro) */
+  tk?: string;
+  bk?: string;
+  id: string;
+  nivel?: "h1" | "h2";
+  centrada?: boolean;
+  class?: string;
+}
+const { titulo, bajada, tk, bk, id, nivel = "h2", centrada = false, class: className } = Astro.props;
+const Titulo = nivel;
+---
+
+<header class:list={["cab", { "cab--centrada": centrada }, className]}>
+  <Titulo id={id} class:list={[nivel === "h1" ? "t-display" : "t-h2", "cab-titulo"]}>{tk ? <T k={tk} v={titulo} /> : titulo}</Titulo>
+  {bajada && <p class="t-lead cab-bajada">{bk ? <T k={bk} v={bajada} /> : bajada}</p>}
+  <slot />
+</header>
+
+<style>
+  .cab { display: grid; gap: var(--s-5); margin-bottom: var(--s-7); }
+  .cab-titulo { max-width: 20ch; }
+  .cab-bajada { max-width: 46ch; }
+  .cab--centrada { justify-items: center; text-align: center; }
+  @media (min-width: 1024px) {
+    .cab { margin-bottom: var(--s-8); }
+  }
+</style>

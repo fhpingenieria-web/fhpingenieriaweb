@@ -1,0 +1,118 @@
+# Páginas temáticas del menú y de la portada. Las fotos están en src/assets/temas/<tema>.jpg:
+# para cambiar una, se reemplaza ese archivo.
+# Textos de partida redactados a partir de lo que se conoce de la empresa: los ajusta Facundo desde la web.
+verMas: Ver más
+experiencia:
+  palabra: Experiencia
+  bajada: Más de 20 años de experiencia profesional al servicio de proyectos industriales y de infraestructura.
+  descripcionGoogle: Más de 20 años de experiencia profesional en ingeniería mecánica, mantenimiento industrial, inspección técnica y gestión de proyectos.
+  intro:
+    - Más de 20 años de trabajo en ingeniería, mantenimiento e inspección son la base de cada servicio de FHP.
+    - La consultora nace de la trayectoria de su fundador, el Ing. Facundo Hernán Porta, con experiencia profesional en ingeniería mecánica, mantenimiento industrial, inspección técnica y gestión de proyectos.
+    - Cada trabajo se aborda con una mirada integral, que considera tanto el problema técnico como la forma en que el proyecto se ejecuta, se documenta y se cierra.
+  bloques:
+    - titulo: Trayectoria
+      texto: El Ing. Porta dirige cada trabajo de manera directa. Comprende los requerimientos, ordena la información, acompaña el trabajo técnico y facilita el seguimiento de los compromisos acordados.
+    - titulo: Especialidades
+      texto: Ingeniería mecánica, mantenimiento industrial, inspección técnica y gestión de proyectos. Según la necesidad, los cálculos y las revisiones técnicas pueden abarcar las especialidades mecánica, eléctrica y civil.
+    - titulo: Participación en los proyectos
+      texto: La experiencia abarca distintas etapas del trabajo técnico, como la planificación, el seguimiento, la coordinación entre las partes y la documentación técnica.
+    - titulo: Sectores
+      texto: Trabajamos en Oil & Gas y energía, en industria, y en proyectos de agua, saneamiento e infraestructura, entornos donde la precisión, la seguridad y la trazabilidad no son opcionales.
+    - titulo: Antes, durante y al cierre
+      texto: Acompañamos el proyecto desde la evaluación de alternativas, antes de comprometer tiempo y recursos, hasta la documentación de cierre, pasando por la inspección y el seguimiento.
+    - titulo: Ámbito de trabajo
+      texto: Trabajamos en Argentina y el Mercosur. Si tu proyecto está en la región, contanos en qué etapa se encuentra y qué necesitás resolver.
+compromiso:
+  palabra: Compromiso
+  bajada: Conocimiento técnico. Compromiso profesional.
+  descripcionGoogle: Cómo trabaja FHP. Alcance acordado antes de empezar, trabajo documentado y seguimiento de los compromisos.
+  intro:
+    - En FHP acordamos qué vamos a hacer, lo hacemos con rigor técnico y dejamos registro de todo el trabajo.
+    - Nuestro compromiso se apoya en la integridad, el rigor técnico, la seguridad, la transparencia y la mejora continua.
+    - Antes de empezar, acordamos qué se va a hacer y qué se va a entregar. Durante el trabajo, registramos lo que pasa. Al cerrar, dejamos la documentación en orden.
+  bloques:
+    - titulo: Alcance claro
+      texto: El alcance de cada trabajo se acuerda antes de empezar. Las tareas y los entregables quedan definidos con cada cliente, para que todos sepan qué esperar.
+    - titulo: Todo documentado
+      texto: Lo que hacemos queda documentado. Las observaciones, los avances y las decisiones quedan registrados, para que cada una tenga su respaldo y se pueda consultar más adelante.
+    - titulo: Seguimiento de lo acordado
+      texto: Acompañamos el trabajo técnico y facilitamos el seguimiento de los compromisos. Cada observación se sigue hasta su cierre y cada parte sabe qué le corresponde.
+    - titulo: Rigor técnico
+      texto: Las recomendaciones se apoyan en análisis, cálculos y revisiones técnicas. Decimos lo que encontramos, con fundamentos claros, para que puedas decidir con información ordenada.
+    - titulo: Seguridad y calidad
+      texto: Trabajamos con una mirada enfocada en la calidad y la seguridad, y revisamos la conformidad frente a los planos, las especificaciones y los requisitos aplicables.
+    - titulo: Mejora continua
+      texto: Revisamos lo hecho en cada trabajo y ajustamos nuestra forma de trabajar a partir de lo aprendido.
+sustentabilidad:
+  palabra: Sustentabilidad
+  bajada: Decidir con criterio técnico también es cuidar los recursos.
+  descripcionGoogle: Criterio técnico para usar mejor los recursos en proyectos industriales y de infraestructura.
+  intro:
+    - En un proyecto, la sustentabilidad también depende de las decisiones técnicas que se toman y de cómo se controlan.
+    - Una alternativa bien evaluada, un desvío detectado a tiempo o un documento en su versión correcta evitan retrabajos, consumo innecesario de materiales y pérdidas de tiempo.
+    - Como consultora de ingeniería, ayudamos a que los recursos de cada proyecto se usen mejor, con información ordenada y decisiones fundamentadas.
+  bloques:
+    - titulo: Uso responsable de los recursos
+      texto: Evaluar las alternativas antes de comprometer tiempo y recursos ayuda a evitar retrabajos y desperdicios. Una decisión bien fundamentada al inicio suele ser la que menos recursos consume después.
+    - titulo: Detectar a tiempo
+      texto: La inspección y el seguimiento permiten identificar los desvíos durante la ejecución y no al cierre. Corregir temprano significa rehacer menos.
+    - titulo: Trazabilidad
+      texto: Una documentación ordenada permite saber qué se hizo, cómo y por qué, desde el inicio hasta el cierre. Esa información también sirve para mantener y operar mejor lo que se construyó.
+    - titulo: Cumplimiento
+      texto: Revisamos la conformidad frente a las especificaciones y los requisitos aplicables a cada proyecto, y dejamos registradas las observaciones y cómo se resolvieron.
+    - titulo: Seguridad de las personas
+      texto: La seguridad es uno de nuestros valores. Tenerla presente en la mirada técnica es parte de cuidar a quienes llevan adelante cada proyecto.
+    - titulo: Agua y saneamiento
+      texto: Brindamos soporte técnico a proyectos de infraestructura y del sector de agua y saneamiento, un sector con impacto directo en las personas y su entorno.
+equipo:
+  palabra: Equipo
+  bajada: La dirección técnica de cada trabajo está a cargo de su fundador.
+  descripcionGoogle: Ing. Facundo Hernán Porta, fundador y responsable técnico de FHP, con más de 20 años de experiencia profesional.
+  intro:
+    - En FHP, quien evalúa tu proyecto es quien después responde por él.
+    - La consultora nace de la trayectoria profesional del Ing. Facundo Hernán Porta, su fundador y responsable técnico. Esa dirección directa da continuidad al trabajo, desde la primera consulta hasta la entrega.
+  bloques:
+    - titulo: Dirección directa
+      texto: El responsable técnico participa en el trabajo. Comprende los requerimientos, ordena la información y acompaña las decisiones técnicas durante todo el proceso.
+    - titulo: Un interlocutor claro
+      texto: Tenés con quién hablar del proyecto, tanto en lo técnico como en el seguimiento de lo acordado.
+institucional:
+  palabra: Institucional
+  bajada: Ingeniería y consultoría para proyectos industriales y de infraestructura.
+  descripcionGoogle: Quiénes somos, misión, visión y valores de FHP, consultora de ingeniería en Argentina y el Mercosur.
+  intro:
+    - FHP es una consultora de ingeniería de Argentina que trabaja en proyectos industriales y de infraestructura en el país y el Mercosur.
+    - Brindamos consultoría de ingeniería, cálculo y evaluación técnica, inspección técnica, seguimiento de proyectos y proyectos ejecutivos, en sectores como Oil & Gas y energía, industria, agua y saneamiento.
+    - Nacimos de la trayectoria profesional de nuestro fundador, con más de 20 años de experiencia. Nuestro trabajo se centra en que cada proyecto esté bien controlado y bien documentado hasta su cierre.
+  tituloQuienes: Quiénes somos
+  tituloMision: Misión
+  tituloVision: Visión
+  vision: Consolidar una consultora reconocida por su seriedad, confiabilidad y calidad profesional en Argentina y el Mercosur.
+  tituloValores: Valores
+sectores:
+  palabra: Sectores
+  bajada: Tres sectores donde la precisión, la seguridad y la trazabilidad no son opcionales.
+  descripcionGoogle: Ingeniería, inspección y soporte técnico para Oil & Gas y energía, industria, agua, saneamiento e infraestructura.
+  intro:
+    - Cada sector tiene sus propias exigencias, y en todos hace falta saber qué se está haciendo, cómo y si responde a lo especificado.
+    - Acompañamos proyectos en tres sectores, adaptando el alcance de cada trabajo a sus requisitos, su documentación y su etapa.
+  bloques:
+    - titulo: Oil & Gas y energía
+      texto: En entornos con requisitos técnicos y de seguridad exigentes, aportamos ingeniería, seguimiento y soporte técnico, con registros claros de lo revisado y lo observado.
+    - titulo: Industria
+      texto: En instalaciones industriales, brindamos asistencia técnica, inspección y control documental, con conocimiento de ingeniería mecánica y mantenimiento.
+    - titulo: Agua, saneamiento e infraestructura
+      texto: En proyectos con varios actores, ofrecemos soporte técnico, seguimiento y documentación ordenada desde el inicio hasta el cierre.
+metodo:
+  palabra: Método
+  bajada: El alcance de cada trabajo se acuerda antes de empezar. Lo que hacemos queda documentado.
+  descripcionGoogle: Las etapas de trabajo de FHP, desde la consulta inicial hasta el seguimiento y la entrega.
+  intro:
+    - Cada trabajo sigue las mismas etapas, para que siempre sepas en qué punto está y qué viene después.
+    - El método se adapta al alcance de cada proyecto. Primero entendemos la necesidad, después acordamos el trabajo y dejamos registro de lo hecho.
+  bloques:
+    - titulo: Por qué trabajar con un método
+      texto: Ordenar el trabajo en etapas reduce los malentendidos y permite detectar a tiempo lo que falta. También le da al cliente una visión clara del avance.
+    - titulo: Qué recibís
+      texto: Los entregables se acuerdan con cada cliente antes de empezar y quedan documentados al finalizar, según el alcance contratado.

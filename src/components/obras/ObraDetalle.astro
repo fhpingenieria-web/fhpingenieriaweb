@@ -1,0 +1,176 @@
+---
+import { Picture, getImage } from "astro:assets";
+import { getCollection } from "astro:content";
+import Icon from "@/components/ui/Icon.astro";
+import Migas from "@/components/layout/Migas.astro";
+import Visor from "./Visor.astro";
+import { nombreSector, iconoSector, type ObraVista } from "@/lib/obras";
+
+interface Props {
+  obra: ObraVista;
+  siguiente?: ObraVista | undefined;
+  base: string;
+  ejemplo?: boolean;
+}
+const { obra: o, siguiente, base, ejemplo = false } = Astro.props;
+
+const servicios = (await getCollection("servicios")).filter((s) => o.servicios.includes(s.id as never));
+const todas = [o.portada, ...o.fotos];
+// Versión grande para el visor (se pide solo al abrirlo).
+const grandes = await Promise.all(todas.map((f) => getImage({ src: f.src, width: 2000, format: "webp", quality: 80 })));
+---
+
+<article class="od">
+  <header class="contenedor od-cab">
+    <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: "Obras", href: base }, { nombre: o.titulo }]} />
+    {ejemplo && <p class="od-aviso">Vista previa del formato con contenido de ejemplo. No es una obra real.</p>}
+    <div class="od-cab-grilla">
+      <div class="od-cab-texto">
+        <h1 class="od-titulo">{o.titulo}</h1>
+        <p class="od-sector"><Icon name={iconoSector[o.sector]} size={22} />{nombreSector[o.sector]}</p>
+        <p class="od-resumen">{o.resumen}</p>
+      </div>
+      <!-- Ficha técnica: la misma lógica del rótulo de un plano -->
+      <dl class="od-ficha">
+        <div><dt>Ubicación</dt><dd>{o.ubicacion}</dd></div>
+        <div><dt>Período</dt><dd>{o.periodo}</dd></div>
+        <div><dt>Rol de FHP</dt><dd>{o.rol}</dd></div>
+        {o.cliente && <div><dt>Cliente</dt><dd>{o.cliente}</dd></div>}
+        <div><dt>Fotos</dt><dd>{todas.length}</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <figure class="od-portada contenedor">
+    <button type="button" class="od-ampliar" data-abrir="0" aria-label={`Ampliar: ${o.portada.alt}`}>
+      <Picture src={o.portada.src} alt={o.portada.alt} formats={["avif", "webp"]} widths={[768, 1280, 1800, 2400]} sizes="(min-width: 1440px) 1400px, 100vw" loading="eager" fetchpriority="high" />
+    </button>
+  </figure>
+
+  <section class="contenedor seccion od-cuerpo" aria-label="Detalle de la participación">
+    <div class="od-bloque">
+      <h2 class="od-h2">Rol y responsabilidades</h2>
+      <ul role="list" class="od-lista">{o.responsabilidades.map((x) => <li>{x}</li>)}</ul>
+    </div>
+    <div class="od-bloque">
+      <h2 class="od-h2">Tareas e inspecciones</h2>
+      <ul role="list" class="od-lista">{o.tareas.map((x) => <li>{x}</li>)}</ul>
+    </div>
+    {
+      o.resultados.length > 0 && (
+        <div class="od-bloque">
+          <h2 class="od-h2">Resultados</h2>
+          <ul role="list" class="od-lista">{o.resultados.map((x) => <li>{x}</li>)}</ul>
+        </div>
+      )
+    }
+    <div class="od-bloque">
+      <h2 class="od-h2">Servicios aplicados</h2>
+      <ul role="list" class="od-servicios">
+        {
+          servicios.map((s) => (
+            <li>
+              <a href={`/servicios/${s.id}/`}>
+                <Icon name={s.id} size={22} />
+                {s.data.titulo}
+                <Icon name="arrow-up-right" size={16} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    o.fotos.length > 0 && (
+      <section class="contenedor od-galeria-sec" aria-labelledby="od-galeria">
+        <h2 id="od-galeria" class="od-h2">Registro fotográfico</h2>
+        <ul role="list" class="od-galeria">
+          {o.fotos.map((f, i) => (
+            <li>
+              <figure>
+                <button type="button" class="od-ampliar" data-abrir={i + 1} aria-label={`Ampliar: ${f.alt}`}>
+                  <Picture src={f.src} alt={f.alt} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(min-width: 900px) 33vw, 100vw" loading="lazy" />
+                </button>
+                {f.pie && <figcaption>{f.pie}</figcaption>}
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    siguiente && (
+      <nav class="contenedor od-siguiente" aria-label="Siguiente obra">
+        <a href={`${base}${siguiente.slug}/`}>
+          <span class="t-label">Siguiente obra</span>
+          <span class="od-siguiente-titulo">
+            {siguiente.titulo} <Icon name="arrow-right" size={28} />
+          </span>
+        </a>
+      </nav>
+    )
+  }
+</article>
+
+<Visor fotos={grandes.map((g, i) => ({ src: g.src, alt: todas[i]!.alt, pie: todas[i]!.pie ?? "" }))} />
+
+
+
+<style>
+  .od-cab { padding-top: var(--s-5); }
+  .od-aviso { margin-top: var(--s-4); font-size: var(--t-small); font-weight: 600; color: var(--senal-texto); }
+  .od-cab-grilla { margin-top: var(--s-6); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-6) var(--col-gap); align-items: end; }
+  .od-cab-texto { grid-column: 1 / 9; }
+  .od-ficha { grid-column: 9 / -1; }
+  .od-cab-texto { display: grid; gap: var(--s-4); }
+  .od-titulo { font-size: var(--t-5); font-weight: var(--w-titular); line-height: 1.02; letter-spacing: -0.028em; }
+  .od-sector { display: flex; align-items: center; gap: 10px; font: 600 var(--t-label)/1.4 var(--f-sans); color: var(--grafito); }
+  .od-sector :global(.icon) { color: var(--senal-texto); }
+  .od-resumen { margin-top: var(--s-3); font-size: var(--fs-lead); color: var(--grafito); line-height: 1.55; max-width: 56ch; }
+  .od-ficha { border-top: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .od-ficha > div { display: grid; grid-template-columns: 7.5rem 1fr; gap: var(--s-4); padding: 12px 0; border-bottom: var(--filete) solid rgb(14 18 21 / 0.08); }
+  .od-ficha dt { font: 600 var(--t-label)/1.5 var(--f-sans); color: var(--grafito); }
+  .od-ficha dd { font-weight: 500; }
+
+  .od-portada { margin-top: var(--s-7); }
+  .od-portada .od-ampliar { aspect-ratio: 16 / 8; }
+  .od-ampliar { display: block; width: 100%; padding: 0; border: 0; border-radius: var(--r-panel); background: var(--linea); overflow: hidden; cursor: zoom-in; }
+  .od-ampliar :global(picture) { display: block; width: 100%; height: 100%; }
+  .od-ampliar :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out); }
+  .od-ampliar:hover :global(img) { transform: scale(1.02); }
+
+  .od-cuerpo { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-7) var(--col-gap); }
+  .od-bloque { grid-column: span 6; }
+  .od-h2 { font-size: var(--t-2); font-weight: 520; padding-bottom: var(--s-3); }
+  .od-lista li { padding: 12px 0; border-bottom: var(--filete) solid var(--linea); }
+  .od-servicios a { display: grid; grid-template-columns: 22px 1fr 16px; gap: 12px; align-items: center; padding: 14px 0; border-bottom: var(--filete) solid var(--linea); text-decoration: none; font-weight: 500; }
+  .od-servicios a :global(.icon:first-child) { color: var(--senal-texto); }
+  .od-servicios a:hover { text-decoration: underline; text-decoration-color: var(--senal); }
+
+  .od-galeria-sec { display: grid; gap: var(--s-6); }
+  .od-galeria { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--col-gap); }
+  .od-galeria .od-ampliar { aspect-ratio: 4 / 3; border-radius: var(--r-foto); }
+  .od-galeria figcaption { margin-top: var(--s-2); font-size: var(--t-label); color: var(--grafito); }
+
+  .od-siguiente { padding-top: var(--seccion); }
+  .od-siguiente a { display: grid; gap: var(--s-3); padding: var(--s-6) 0; border-top: var(--filete) solid rgb(14 18 21 / 0.12); text-decoration: none; }
+  .od-siguiente-titulo { display: flex; align-items: center; gap: var(--s-4); font-size: var(--t-4); font-weight: var(--w-titular); letter-spacing: -0.02em; }
+  .od-siguiente-titulo :global(.icon) { color: var(--senal); transition: transform var(--dur-2) var(--ease-out); }
+  .od-siguiente a:hover .od-siguiente-titulo :global(.icon) { transform: translateX(8px); }
+
+  @media (max-width: 1023.98px) {
+    .od-cab-texto, .od-ficha, .od-bloque { grid-column: 1 / -1; }
+    .od-galeria { grid-template-columns: 1fr 1fr; }
+    .od-portada .od-ampliar { aspect-ratio: 4 / 3; }
+  }
+  @media (max-width: 520px) {
+    .od-galeria { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .od-ampliar :global(img) { transition: none; }
+  }
+</style>

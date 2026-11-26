@@ -1,0 +1,35 @@
+# Textos generales: cabecera, pie, bloque de contacto y datos de contacto.
+# Se editan desde el panel (Pages CMS). El diseño no depende de estos textos.
+contacto:
+  telefono: "+54 9 11 5956-0932"
+  email: fhp@consultas.com
+  whatsappMensaje: Hola, quiero hacer una consulta sobre un proyecto.
+  whatsappMensajeServicio: Hola, quiero hacer una consulta sobre {servicio} para un proyecto.
+ambito: Argentina y Mercosur
+firma: Conocimiento técnico. Compromiso profesional.
+descripcionInstitucional: Acompañamos proyectos industriales y de infraestructura con experiencia técnica, control documental y una mirada enfocada en la calidad, la seguridad y el seguimiento.
+menu:
+  inicio: Inicio
+  institucional: Institucional
+  experiencia: Experiencia
+  compromiso: Compromiso
+  sustentabilidad: Sustentabilidad
+  servicios: Servicios
+  sectores: Sectores
+  obras: Obras
+  metodo: Método
+  equipo: Equipo
+  contacto: Contacto
+  direccionTecnica: Dirección técnica
+botonContacto: Contanos tu proyecto
+bloqueContacto:
+  titulo: Hablemos de tu necesidad técnica
+  bajada: Contanos sobre tu proyecto, en qué etapa está y qué necesitás resolver.
+  tituloEnServicio: Consultá por {servicio}
+pie:
+  direccionTecnica: Dirección técnica
+  ambito: Ámbito
+  contacto: Contacto
+  servicios: Servicios
+  privacidad: Privacidad
+  creditos: Créditos

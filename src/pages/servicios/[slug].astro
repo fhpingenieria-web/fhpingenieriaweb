@@ -1,0 +1,215 @@
+---
+import T from "@/components/ui/T.astro";
+import { sitio, paginas, rellenar } from "@/lib/textos";
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import Migas from "@/components/layout/Migas.astro";
+import Icon from "@/components/ui/Icon.astro";
+import AConfirmar from "@/components/ui/AConfirmar.astro";
+import Contacto from "@/components/home/Contacto.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import { creditosServicios } from "@/data/creditos";
+import { grafo, migas, preguntas, servicio } from "@/lib/schema";
+
+export async function getStaticPaths() {
+  const todos = (await getCollection("servicios")).sort((a, b) => a.data.orden - b.data.orden);
+  return todos.map((s, i) => ({
+    params: { slug: s.id },
+    props: { s, siguiente: todos[(i + 1) % todos.length]! },
+  }));
+}
+
+interface Props {
+  s: CollectionEntry<"servicios">;
+  siguiente: CollectionEntry<"servicios">;
+}
+const { s, siguiente } = Astro.props;
+const d = s.data;
+const ps = paginas.servicio;
+const site = Astro.site!;
+const url = new URL(`/servicios/${s.id}/`, site).href;
+
+const fotos = import.meta.glob<{ default: ImageMetadata }>("/src/assets/servicios/*.jpg", { eager: true });
+const foto = fotos[`/src/assets/servicios/${s.id}.jpg`]!.default;
+const credito = creditosServicios[s.id]!;
+const fotoSiguiente = fotos[`/src/assets/servicios/${siguiente.id}.jpg`]!.default;
+const fecha = new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "long", year: "numeric" }).format(d.actualizado);
+
+const schema = grafo([
+  servicio(site, { titulo: d.titulo, definicion: d.definicion, url, etapa: d.etapa }),
+  migas([
+    { nombre: "Inicio", url: new URL("/", site).href },
+    { nombre: "Servicios", url: new URL("/servicios/", site).href },
+    { nombre: d.titulo, url },
+  ]),
+  ...(d.faq.length ? [preguntas(d.faq)] : []),
+]);
+---
+
+<Base titulo={d.titulo} descripcion={d.metaDescripcion} schema={schema} imagen={`/og/servicio-${s.id}.png`}>
+  <article>
+    <header class="sv-cab">
+      <div class="sv-escena">
+        <Picture class="sv-fondo" src={foto} alt={credito.descripcion} formats={["avif", "webp"]} widths={[640, 960, 1280, 1600, 2000]} sizes="100vw" loading="eager" fetchpriority="high" />
+        <div class="sv-panel vidrio vidrio--denso">
+          <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: "Servicios", href: "/servicios/" }, { nombre: d.titulo }]} />
+          <h1 class="t-display sv-titulo"><T k={`servicios.${s.id}.titulo`} v={d.titulo} /></h1>
+          <!-- Definición autocontenida: el primer párrafo responde "qué es" (buscadores y motores de respuesta) -->
+          <p class="sv-def"><T k={`servicios.${s.id}.definicion`} v={d.definicion} /></p>
+          <div class="sv-acciones">
+            <a class="btn" href="#contacto"><T k="sitio.botonContacto" v={sitio.botonContacto} /> <Icon name="arrow-right" size={18} /></a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="sv-cuerpo contenedor seccion" aria-label="Alcance del servicio">
+      <div class="sv-bloque sv-b1">
+        <h2 class="sv-h2"><T k="paginas.servicio.tituloIncluye" v={ps.tituloIncluye} /></h2>
+        <ul role="list" class="sv-lista">{d.incluye.map((x, i) => <li><Icon name="check" size={18} /><T k={`servicios.${s.id}.incluye.${i}`} v={x} /></li>)}</ul>
+      </div>
+      <div class="sv-bloque sv-b2">
+        <h2 class="sv-h2"><T k="paginas.servicio.tituloConviene" v={ps.tituloConviene} /></h2>
+        <ul role="list" class="sv-lista sv-lista-texto">{d.situaciones.map((x, i) => <li><T k={`servicios.${s.id}.situaciones.${i}`} v={x} /></li>)}</ul>
+      </div>
+      <div class="sv-bloque sv-b3">
+        <h2 class="sv-h2"><T k="paginas.servicio.tituloEntregables" v={ps.tituloEntregables} /></h2>
+        <AConfirmar activo={d.entregables.aConfirmar} nota="Entregables a confirmar">
+          <ul role="list" class="sv-chips">{d.entregables.items.map((x, i) => <li><T k={`servicios.${s.id}.entregables.items.${i}`} v={x} /></li>)}</ul>
+        </AConfirmar>
+        <p class="sv-nota"><T k="paginas.servicio.notaEntregables" v={ps.notaEntregables} /></p>
+      </div>
+    </section>
+
+    {
+      d.faq.length > 0 && (
+        <section class="sv-faq contenedor" aria-labelledby="faq-titulo">
+          <CabSeccion id="faq-titulo" titulo={ps.tituloPreguntas} tk="paginas.servicio.tituloPreguntas" />
+          <div class="sv-faq-lista">
+            {d.faq.map((f, i) => (
+              <details name="faq" open={i === 0}>
+                <summary>
+                  <span><T k={`servicios.${s.id}.faq.${i}.pregunta`} v={f.pregunta} /></span>
+                  <Icon name="plus" size={20} />
+                </summary>
+                <p><T k={`servicios.${s.id}.faq.${i}.respuesta`} v={f.respuesta} /></p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <nav class="sv-siguiente contenedor" aria-label="Siguiente servicio">
+      <a class="sv-sig-tarjeta" href={`/servicios/${siguiente.id}/`}>
+        <Picture class="sv-sig-foto" src={fotoSiguiente} alt="" formats={["avif", "webp"]} widths={[640, 960, 1400]} sizes="100vw" loading="lazy" decoding="async" />
+        <span class="sv-sig-panel vidrio vidrio--denso">
+          <span class="sv-siguiente-titulo"><T k={`servicios.${siguiente.id}.titulo`} v={siguiente.data.titulo} /> <Icon name="arrow-right" size={28} /></span>
+          <span class="sv-sig-rotulo"><T k="paginas.servicio.siguiente" v={ps.siguiente} /></span>
+        </span>
+      </a>
+      <p class="sv-actualizado"><T k="paginas.servicio.actualizado" v={ps.actualizado} /> <time datetime={d.actualizado.toISOString().slice(0, 10)}>{fecha}</time></p>
+    </nav>
+  </article>
+
+  <Contacto servicio={d.nombreCorto} titulo={rellenar(sitio.bloqueContacto.tituloEnServicio, { servicio: d.nombreCorto.toLowerCase() })} />
+</Base>
+
+<style>
+  /* ---------- Cabecera: foto grande con panel de vidrio ---------- */
+  .sv-cab { padding: var(--s-4) 12px 0; }
+  .sv-escena {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: min(860px, 100svh);
+    border-radius: var(--r-panel);
+    display: grid;
+    align-items: end;
+    padding: var(--s-8) 12px 12px;
+    background: var(--linea);
+  }
+  .sv-escena :global(img.sv-fondo) { filter: var(--foto-filtro); position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; }
+  .sv-panel { width: min(100%, 680px); padding: var(--s-6) var(--s-5); display: grid; gap: var(--s-5); }
+  .sv-panel > * { position: relative; z-index: 2; }
+  .sv-titulo { max-width: 14ch; }
+  .sv-def { font-size: var(--t-0); line-height: 1.6; color: var(--grafito); max-width: 54ch; }
+
+  /* ---------- Alcance ---------- */
+  .sv-cuerpo { display: grid; gap: var(--s-7) var(--col-gap); }
+  .sv-bloque { padding-top: var(--s-4); border-top: var(--filete-fuerte) solid rgb(14 18 21 / 0.18); display: grid; gap: var(--s-4); align-content: start; }
+  .sv-bloque > * { position: relative; z-index: 2; }
+  .sv-h2 { font-size: var(--t-2); font-weight: 520; letter-spacing: -0.015em; }
+  .sv-lista li { display: flex; gap: var(--s-3); align-items: baseline; padding: var(--s-3) 0; font-weight: 500; }
+  .sv-lista li + li { border-top: var(--filete) solid rgb(14 18 21 / 0.08); }
+  .sv-lista :global(.icon) { color: var(--senal-texto); flex: none; transform: translateY(3px); }
+  .sv-lista-texto li { font-weight: 400; color: var(--grafito); }
+  .sv-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .sv-chips li { padding: 8px 14px; border-radius: var(--r-pastilla); background: rgb(255 255 255 / 0.75); box-shadow: inset 0 0 0 1px rgb(14 18 21 / 0.06); font-size: var(--t-small); font-weight: 500; }
+  .sv-nota { font-size: var(--t-small); color: var(--grafito); }
+
+  /* ---------- Preguntas frecuentes ---------- */
+  .sv-faq { padding-bottom: var(--seccion); }
+  .sv-faq-lista { max-width: 920px; border-top: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .sv-faq details { position: relative; z-index: 2; }
+  .sv-faq details { border-bottom: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .sv-faq summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-5);
+    padding: var(--s-5) 0;
+    font-size: var(--t-1);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .sv-faq summary::-webkit-details-marker { display: none; }
+  .sv-faq summary :global(.icon) { flex: none; transition: transform var(--dur-2) var(--ease-out); }
+  .sv-faq details[open] summary :global(.icon) { transform: rotate(45deg); color: var(--senal-texto); }
+  .sv-faq details p { padding-bottom: var(--s-5); color: var(--grafito); max-width: 60ch; }
+  .sv-faq details::details-content { block-size: 0; overflow: hidden; transition: block-size var(--dur-2) var(--ease-out), content-visibility var(--dur-2) allow-discrete; }
+  .sv-faq details[open]::details-content { block-size: auto; }
+
+  /* ---------- Siguiente servicio ---------- */
+  .sv-sig-tarjeta {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    align-items: end;
+    min-height: 360px;
+    padding: 12px;
+    border-radius: var(--r-panel);
+    text-decoration: none;
+    background: var(--linea);
+  }
+  .sv-sig-tarjeta :global(img.sv-sig-foto) { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+  .sv-sig-tarjeta:hover :global(img.sv-sig-foto) { transform: scale(1.04); }
+  .sv-sig-panel { display: grid; gap: var(--s-2); padding: var(--s-5); border-radius: calc(var(--r-panel) - 12px); width: min(100%, 640px); }
+  .sv-sig-panel > * { position: relative; z-index: 2; }
+  .sv-sig-rotulo { font-size: var(--t-label); font-weight: 600; color: var(--grafito); }
+  .sv-siguiente-titulo { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); font-size: var(--t-3); font-weight: var(--w-titular); letter-spacing: -0.025em; line-height: 1.05; }
+  .sv-siguiente-titulo :global(.icon) { flex: none; transition: transform var(--dur-2) var(--ease-out); color: var(--senal-texto); }
+  .sv-sig-tarjeta:hover .sv-siguiente-titulo :global(.icon) { transform: translateX(6px); }
+  .sv-actualizado { margin-top: var(--s-4); font-size: var(--t-label); color: var(--grafito); }
+
+  @media (min-width: 768px) {
+    .sv-cab { padding: var(--s-5) var(--gutter) 0; }
+    .sv-escena { padding: var(--s-9) var(--s-5) var(--s-5); }
+    .sv-panel { padding: var(--s-7); }
+    .sv-cuerpo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .sv-cuerpo { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+    .sv-b1 { grid-column: 1; }
+    .sv-b3 { grid-column: 1 / -1; }
+    .sv-escena { align-items: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sv-sig-tarjeta :global(img.sv-sig-foto), .sv-faq summary :global(.icon) { transition: none; }
+  }
+</style>

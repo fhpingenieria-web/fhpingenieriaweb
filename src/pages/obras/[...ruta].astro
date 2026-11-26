@@ -1,0 +1,56 @@
+---
+/**
+ * Obras: una sola ruta para el índice y cada obra.
+ * - Producción: solo genera páginas si hay obras publicadas (y `secciones.obras` activo).
+ * - Desarrollo: además, /obras/vista-previa/ muestra el formato con contenido de EJEMPLO.
+ */
+import Base from "@/layouts/Base.astro";
+import ObrasIndice from "@/components/obras/ObrasIndice.astro";
+import ObraDetalle from "@/components/obras/ObraDetalle.astro";
+import Contacto from "@/components/home/Contacto.astro";
+import { obrasPublicadas, obrasEjemplo, type ObraVista } from "@/lib/obras";
+import { grafo, migas } from "@/lib/schema";
+
+export async function getStaticPaths() {
+  const rutas: { params: { ruta: string | undefined }; props: Record<string, unknown> }[] = [];
+  const agregar = (obras: ObraVista[], base: string, prefijo: string | undefined, ejemplo: boolean) => {
+    if (!obras.length) return;
+    rutas.push({ params: { ruta: prefijo }, props: { tipo: "indice", obras, base, ejemplo } });
+    obras.forEach((obra, i) =>
+      rutas.push({
+        params: { ruta: prefijo ? `${prefijo}/${obra.slug}` : obra.slug },
+        props: { tipo: "detalle", obra, siguiente: obras.length > 1 ? obras[(i + 1) % obras.length] : undefined, base, ejemplo },
+      }),
+    );
+  };
+  agregar(await obrasPublicadas(), "/obras/", undefined, false);
+  if (import.meta.env.DEV) agregar(await obrasEjemplo(), "/obras/vista-previa/", "vista-previa", true);
+  return rutas;
+}
+
+type Props =
+  | { tipo: "indice"; obras: ObraVista[]; base: string; ejemplo: boolean }
+  | { tipo: "detalle"; obra: ObraVista; siguiente?: ObraVista; base: string; ejemplo: boolean };
+
+const p = Astro.props as Props;
+const site = Astro.site!;
+const url = (r: string) => new URL(r, site).href;
+
+const titulo = p.tipo === "indice" ? "Obras y antecedentes" : p.obra.titulo;
+const descripcion =
+  p.tipo === "indice"
+    ? "Obras y antecedentes de FHP Consultora e Ingeniería: rol, tareas y período de cada proyecto en Oil & Gas, industria e infraestructura."
+    : p.obra.resumen;
+const schema = grafo([
+  migas([
+    { nombre: "Inicio", url: url("/") },
+    { nombre: "Obras", url: url(p.base) },
+    ...(p.tipo === "detalle" ? [{ nombre: p.obra.titulo, url: url(`${p.base}${p.obra.slug}/`) }] : []),
+  ]),
+]);
+---
+
+<Base titulo={titulo} descripcion={descripcion} schema={schema} noindex={p.ejemplo}>
+  {p.tipo === "indice" ? <ObrasIndice obras={p.obras} base={p.base} ejemplo={p.ejemplo} /> : <ObraDetalle obra={p.obra} siguiente={p.siguiente} base={p.base} ejemplo={p.ejemplo} />}
+  <Contacto titulo={p.tipo === "detalle" ? "¿Tenés un proyecto similar?" : "Hablemos de tu necesidad técnica"} />
+</Base>

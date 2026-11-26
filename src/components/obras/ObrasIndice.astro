@@ -1,0 +1,162 @@
+---
+import { Picture } from "astro:assets";
+import BandaCurva from "./BandaCurva.astro";
+import Icon from "@/components/ui/Icon.astro";
+import Migas from "@/components/layout/Migas.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import { nombreSector, iconoSector, type ObraVista } from "@/lib/obras";
+
+interface Props {
+  obras: ObraVista[];
+  /** Base de las URLs de detalle (/obras/ o /obras/vista-previa/). */
+  base: string;
+  ejemplo?: boolean;
+}
+const { obras, base, ejemplo = false } = Astro.props;
+const sectores = (["energia", "industria", "infraestructura"] as const).filter((s) => obras.some((o) => o.sector === s));
+---
+
+<section class="oi-cab" aria-labelledby="oi-titulo">
+  <div class="contenedor oi-cab-texto">
+    <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: "Obras" }]} />
+    <CabSeccion
+      nivel="h1"
+      id="oi-titulo"
+      titulo="Obras y antecedentes"
+      bajada="Proyectos en los que participamos, con el rol, las tareas y el período de cada uno. Las fotos y los datos se publican con autorización del cliente."
+      class="oi-cabsec"
+    >
+      {ejemplo && <p class="oi-aviso">Vista previa del formato con contenido de ejemplo. No son obras reales y esta página no se publica.</p>}
+    </CabSeccion>
+  </div>
+  <BandaCurva fotos={obras.map((o) => o.portada)} class="oi-banda" />
+</section>
+
+<section class="contenedor seccion oi-lista-sec" aria-label="Listado de obras">
+  {
+    sectores.length > 1 && (
+      <div class="oi-filtros" role="group" aria-label="Filtrar por sector" data-filtros>
+        <button type="button" aria-pressed="true" data-filtro="todas">
+          Todas <span>{obras.length}</span>
+        </button>
+        {sectores.map((s) => (
+          <button type="button" aria-pressed="false" data-filtro={s}>
+            <Icon name={iconoSector[s]} size={18} />
+            {nombreSector[s]} <span>{obras.filter((o) => o.sector === s).length}</span>
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <ol class="oi-lista" role="list" data-lista>
+    {
+      obras.map((o, i) => (
+        <li class="oi-item" data-sector={o.sector}>
+          <a href={`${base}${o.slug}/`} class="oi-enlace">
+            <div class="oi-foto">
+              <Picture src={o.portada.src} alt={o.portada.alt} formats={["avif", "webp"]} widths={[480, 720, 1080]} sizes="(min-width: 900px) 40vw, 100vw" loading={i < 2 ? "eager" : "lazy"} />
+            </div>
+            <div class="oi-texto">
+              <h2 class="oi-nombre">{o.titulo}</h2>
+              <p class="oi-resumen">{o.resumen}</p>
+              <dl class="oi-ficha">
+                <div><dt>Sector</dt><dd>{nombreSector[o.sector]}</dd></div>
+                <div><dt>Ubicación</dt><dd>{o.ubicacion}</dd></div>
+                <div><dt>Período</dt><dd>{o.periodo}</dd></div>
+                <div><dt>Rol</dt><dd>{o.rol}</dd></div>
+              </dl>
+              <span class="enlace">Ver la obra <Icon name="arrow-right" size={18} /></span>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="oi-vacio" data-vacio hidden>Todavía no hay obras publicadas en este sector. Elegí «Todas» para ver el resto.</p>
+</section>
+
+<script>
+  // Filtro por sector: mejora progresiva (sin JS se ven todas).
+  document.querySelectorAll<HTMLElement>("[data-filtros]").forEach((grupo) => {
+    const botones = [...grupo.querySelectorAll<HTMLButtonElement>("[data-filtro]")];
+    const items = [...document.querySelectorAll<HTMLElement>("[data-lista] > li")];
+    const vacio = document.querySelector<HTMLElement>("[data-vacio]");
+    botones.forEach((b) =>
+      b.addEventListener("click", () => {
+        const f = b.dataset.filtro;
+        botones.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+        let visibles = 0;
+        items.forEach((it) => {
+          const ver = f === "todas" || it.dataset.sector === f;
+          it.hidden = !ver;
+          if (ver) visibles++;
+        });
+        if (vacio) vacio.hidden = visibles > 0;
+      }),
+    );
+  });
+</script>
+
+<style>
+  .oi-cab { position: relative; display: grid; }
+  .oi-cab-texto { position: relative; z-index: 2; display: grid; gap: var(--s-5); padding-top: var(--s-5); }
+  .oi-cab-texto :global(.oi-cabsec) { margin-top: var(--s-4); margin-bottom: 0; }
+
+  .oi-aviso { font-size: var(--t-small); font-weight: 600; color: var(--senal-texto); }
+  .oi-cab :global(.oi-banda) { height: clamp(260px, 34vw, 470px); margin-top: var(--s-5); }
+
+  .oi-lista-sec { padding-top: var(--s-8); }
+  .oi-filtros { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-7); }
+  .oi-filtros button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: var(--r-pastilla);
+    background: rgb(255 255 255 / 0.6);
+    box-shadow: inset 0 0 0 1px rgb(14 18 21 / 0.07);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--tinta);
+    transition: background-color var(--dur-1), border-color var(--dur-1), color var(--dur-1);
+  }
+  .oi-filtros button span { color: var(--grafito); font-variant-numeric: tabular-nums; }
+  .oi-filtros button:hover { background: rgb(255 255 255 / 0.95); }
+  .oi-filtros button[aria-pressed="true"] { background: var(--tinta); border-color: var(--tinta); color: var(--sobre-tinta); }
+  .oi-filtros button[aria-pressed="true"] span { color: var(--sobre-tinta-2); }
+
+  .oi-lista { border-top: var(--filete) solid rgb(14 18 21 / 0.1); }
+  .oi-item[hidden] { display: none; }
+  .oi-enlace {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--s-5) var(--col-gap);
+    padding: var(--s-6) 0;
+    border-bottom: var(--filete) solid var(--linea);
+    text-decoration: none;
+  }
+  .oi-foto { grid-column: 1 / 6; aspect-ratio: 3 / 2; overflow: hidden; border-radius: var(--r-foto); background: var(--linea); }
+  .oi-foto :global(picture) { display: block; height: 100%; }
+  .oi-foto :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out); }
+  .oi-enlace:hover .oi-foto :global(img) { transform: scale(1.035); }
+  .oi-texto { grid-column: 6 / -1; display: grid; gap: var(--s-4); align-content: start; }
+  .oi-nombre { font-size: var(--t-3); font-weight: var(--w-titular); letter-spacing: -0.02em; line-height: 1.05; }
+  .oi-resumen { color: var(--grafito); max-width: 60ch; }
+  .oi-ficha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: var(--filete) solid var(--linea); margin-top: var(--s-2); }
+  .oi-ficha > div { display: grid; gap: 2px; padding: 10px 0; border-bottom: var(--filete) solid var(--linea); }
+  .oi-ficha > div:nth-child(odd) { padding-right: var(--s-4); }
+  .oi-ficha dt { font: 600 var(--t-label)/1.4 var(--f-sans); color: var(--grafito); }
+  .oi-ficha dd { font-weight: 500; }
+  .oi-enlace:hover .enlace { text-decoration-color: var(--senal); }
+  .oi-vacio { padding: var(--s-7) 0; color: var(--grafito); }
+
+  @media (max-width: 767.98px) {
+    .oi-foto, .oi-texto { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .oi-foto :global(img) { transition: none; }
+  }
+</style>

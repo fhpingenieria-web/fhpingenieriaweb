@@ -1,0 +1,125 @@
+---
+/**
+ * Portada: carrusel a pantalla completa. Primero el mensaje principal con el video de plantas industriales;
+ * después una palabra grande por tema, con su foto y "Ver más" a la página que lo desarrolla.
+ * Sin JS se ve la primera diapositiva.
+ */
+import { Picture } from "astro:assets";
+import posterVideo from "@/assets/hero/poster.jpg";
+import experiencia from "@/assets/temas/experiencia.jpg";
+import compromiso from "@/assets/temas/compromiso.jpg";
+import sustentabilidad from "@/assets/temas/sustentabilidad.jpg";
+import equipo from "@/assets/temas/equipo.jpg";
+import Icon from "@/components/ui/Icon.astro";
+import T from "@/components/ui/T.astro";
+import { sitio, inicio, temas } from "@/lib/textos";
+
+const palabras = [
+  { id: "experiencia", foto: experiencia, palabra: temas.experiencia.palabra },
+  { id: "compromiso", foto: compromiso, palabra: temas.compromiso.palabra },
+  // Foco a la derecha: en pantallas angostas el recorte conserva el molino principal
+  { id: "sustentabilidad", foto: sustentabilidad, palabra: temas.sustentabilidad.palabra, foco: "82% 50%" },
+  { id: "equipo", foto: equipo, palabra: temas.equipo.palabra },
+];
+const total = palabras.length + 1;
+---
+
+<section class="car" data-carrusel aria-roledescription="carrusel" aria-label="Presentación">
+  <div class="car-pista">
+    <div class="car-slide es-activa" data-slide role="group" aria-roledescription="diapositiva" aria-label={`1 de ${total}`}>
+      <div class="car-medio">
+        <Picture class="car-img" src={posterVideo} alt="" formats={["webp"]} widths={[640, 960, 1280, 1920]} sizes="100vw" quality={72} loading="eager" fetchpriority="high" decoding="async" />
+        <video class="car-img" data-video muted loop playsinline disablepictureinpicture preload="none" aria-hidden="true">
+          <source src="/video/hero-854.mp4" type="video/mp4" media="(max-width: 767px)" />
+          <source src="/video/hero-1280.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="car-texto contenedor">
+        <h1 class="car-h1"><T k="inicio.hero.titular" v={inicio.hero.titular} /></h1>
+        <p class="car-bajada"><T k="inicio.hero.bajada" v={inicio.hero.bajada} /></p>
+        <div class="car-acciones">
+          <a class="btn car-cta" href="/contacto/"><T k="sitio.botonContacto" v={sitio.botonContacto} /> <Icon name="arrow-right" size={18} /></a>
+          <a class="car-mas" href="/servicios/"><T k="inicio.hero.botonSecundario" v={inicio.hero.botonSecundario} /> <Icon name="arrow-right" size={18} /></a>
+        </div>
+      </div>
+    </div>
+    {
+      palabras.map((p, i) => (
+        <div class="car-slide" data-slide role="group" aria-roledescription="diapositiva" aria-label={`${i + 2} de ${total}`} aria-hidden="true" inert>
+          <div class="car-medio" style={p.foco ? `--foco: ${p.foco}` : undefined}>
+            <Picture class="car-img" src={p.foto} alt="" formats={["avif", "webp"]} widths={[640, 960, 1400, 2000]} sizes="100vw" loading="lazy" fetchpriority="low" decoding="async" />
+          </div>
+          <div class="car-texto contenedor">
+            <h2 class="car-palabra" style={`--letras: ${p.palabra.length}`}><T k={`temas.${p.id}.palabra`} v={p.palabra} /></h2>
+            <a class="car-mas" href={`/${p.id}/`}><T k="temas.verMas" v={temas.verMas} /> <Icon name="arrow-right" size={18} /></a>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="car-controles" data-controles hidden>
+    <button type="button" class="car-flecha car-ant" data-ant aria-label="Diapositiva anterior"><Icon name="arrow-left" size={22} /></button>
+    <button type="button" class="car-flecha car-sig" data-sig aria-label="Diapositiva siguiente"><Icon name="arrow-right" size={22} /></button>
+    <div class="car-pie">
+      <div class="car-puntos">
+        {Array.from({ length: total }, (_, i) => <button type="button" class="car-punto" data-punto={i} aria-label={`Ir a la diapositiva ${i + 1}`} aria-current={i === 0 ? "true" : undefined}></button>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { iniciarCarrusel } from "@/scripts/carrusel";
+  iniciarCarrusel();
+</script>
+
+<style>
+  .car { position: relative; height: 100svh; min-height: 600px; overflow: hidden; background: var(--tinta); color: #fff; isolation: isolate; }
+  .car-pista { position: absolute; inset: 0; }
+  .car-slide { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; visibility: hidden; transition: opacity 900ms var(--ease-in-out), visibility 900ms; }
+  .car-slide.es-activa { opacity: 1; visibility: visible; z-index: 1; }
+
+  .car-medio { position: absolute; inset: 0; }
+  .car-medio :global(picture) { position: absolute; inset: 0; }
+  .car-medio :global(.car-img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--foco, 50% 50%); filter: var(--foto-filtro); }
+  /* Velo azul noche, parejo: el texto se lee sobre cualquier foto (más denso arriba, donde va la cabecera) */
+  .car-medio::after { content: ""; position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 70% 42% at 50% 52%, rgb(6 18 40 / 0.38), transparent 100%), linear-gradient(180deg, rgb(6 18 40 / 0.5), rgb(6 18 40 / 0.34) 30%, rgb(6 18 40 / 0.4) 70%, rgb(6 18 40 / 0.68)); }
+
+  .car-texto { position: relative; z-index: 2; display: grid; justify-items: center; gap: var(--s-5); text-align: center; padding-top: calc(var(--franja-h) + var(--header-h)); text-shadow: 0 1px 24px rgb(6 18 40 / 0.5); }
+  .car-h1 { font-size: clamp(2.5rem, 0.8rem + 5.6vw, 5.75rem); font-weight: 600; line-height: 1.04; letter-spacing: -0.03em; text-wrap: balance; max-width: 15ch; }
+  .car-bajada { font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem); font-weight: 500; line-height: 1.5; max-width: 50ch; text-wrap: pretty; }
+  .car-acciones { margin-top: var(--s-2); display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--s-4) var(--s-6); }
+  .car :global(.car-cta) { background: #fff; color: var(--senal-texto); text-shadow: none; }
+  .car :global(.car-cta:hover) { background: var(--senal-texto); color: #fff; }
+
+  /* Palabra: lo más grande que entre en el ancho, según la cantidad de letras */
+  .car-palabra { font-size: min(clamp(2.5rem, 0.8rem + 7.2vw, 7rem), calc(90vw / (var(--letras) * 0.76))); font-weight: 600; line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; overflow-wrap: anywhere; }
+  .car-mas { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 1.0625rem; font-weight: 600; color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.4em; text-decoration-color: rgb(255 255 255 / 0.55); transition: text-decoration-color var(--dur-2) var(--ease-out); }
+  .car-mas:hover { text-decoration-color: #fff; }
+  .car-mas :global(.icon) { transition: transform var(--dur-2) var(--ease-out); }
+  .car-mas:hover :global(.icon) { transform: translateX(4px); }
+
+  .car-controles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+  .car-controles[hidden] { display: none; }
+  .car-controles button { pointer-events: auto; color: #fff; }
+  .car-flecha { position: absolute; top: 50%; width: 48px; height: 48px; margin-top: 12px; display: grid; place-items: center; border-radius: var(--r-pastilla); background: rgb(6 18 40 / 0.28); transition: background-color var(--dur-2) var(--ease-out); }
+  .car-flecha:hover { background: rgb(6 18 40 / 0.6); }
+  .car-ant { left: var(--s-4); }
+  .car-sig { right: var(--s-4); }
+  .car-pie { position: absolute; left: 0; right: 0; bottom: var(--s-5); display: flex; justify-content: center; align-items: center; gap: var(--s-3); }
+  .car-puntos { display: flex; align-items: center; }
+  /* El punto se ve chico; el área tocable mide 28 × 28 */
+  .car-punto { width: 28px; height: 28px; display: grid; place-items: center; }
+  .car-punto::before { content: ""; width: 9px; height: 9px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #fff; transition: background-color var(--dur-1) var(--ease-out); }
+  .car-punto[aria-current="true"]::before { background: #fff; }
+
+  @media (max-width: 767.98px) {
+    /* En celular se pasa deslizando: las flechas taparían la palabra */
+    .car-flecha { display: none; }
+    .car-acciones { flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .car-slide, .car-flecha, .car-mas, .car-mas :global(.icon), .car-punto::before { transition: none; }
+  }
+</style>

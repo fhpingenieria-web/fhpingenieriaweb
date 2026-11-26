@@ -1,0 +1,70 @@
+---
+import T from "@/components/ui/T.astro";
+import { inicio } from "@/lib/textos";
+
+const d = inicio.direccionTecnica;
+---
+
+<section class="dir contenedor seccion" id="direccion-tecnica" aria-labelledby="dir-titulo">
+  <header class="dir-cab">
+    <h2 id="dir-titulo" class="t-h2 dir-titulo"><T k="inicio.direccionTecnica.nombre" v={d.nombre} /></h2>
+    <p class="dir-exp"><strong><T k="inicio.direccionTecnica.experiencia" v={d.experiencia} /></strong> <T k="inicio.direccionTecnica.rol" v={d.rol} /></p>
+  </header>
+
+  <div class="dir-cuerpo">
+    <div class="dir-texto-col">
+      <p class="dir-texto"><T k="inicio.direccionTecnica.texto" v={d.texto} /></p>
+      <blockquote class="dir-mision">
+        <p><T k="inicio.direccionTecnica.mision" v={d.mision} /></p>
+        <footer><T k="inicio.direccionTecnica.rotuloMision" v={d.rotuloMision} /></footer>
+      </blockquote>
+    </div>
+
+    <div class="dir-panel">
+      <dl>
+        <div>
+          <dt><T k="inicio.direccionTecnica.tituloEspecialidades" v={d.tituloEspecialidades} /></dt>
+          <dd><ul role="list">{d.especialidades.map((x, i) => <li><T k={`inicio.direccionTecnica.especialidades.${i}`} v={x} /></li>)}</ul></dd>
+        </div>
+        <div>
+          <dt><T k="inicio.direccionTecnica.tituloParticipacion" v={d.tituloParticipacion} /></dt>
+          <dd><ul role="list">{d.participacion.map((x, i) => <li><T k={`inicio.direccionTecnica.participacion.${i}`} v={x} /></li>)}</ul></dd>
+        </div>
+        <div class="dir-valores">
+          <dt><T k="inicio.direccionTecnica.tituloValores" v={d.tituloValores} /></dt>
+          <dd><ul role="list" class="dir-chips">{d.valores.map((x, i) => <li><T k={`inicio.direccionTecnica.valores.${i}`} v={x} /></li>)}</ul></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .dir-cab { display: grid; gap: var(--s-5); }
+  .dir-titulo { font-size: var(--t-6); line-height: 0.98; letter-spacing: -0.035em; max-width: 14ch; }
+  .dir-exp { font-size: var(--t-1); line-height: 1.45; color: var(--grafito); max-width: 44ch; }
+  .dir-exp strong { color: var(--tinta); font-weight: 560; }
+
+  .dir-cuerpo { margin-top: var(--s-8); display: grid; gap: var(--s-7); align-items: start; }
+  .dir-texto-col { display: grid; gap: var(--s-6); }
+  .dir-texto { font-size: var(--t-1); line-height: 1.5; letter-spacing: -0.005em; max-width: 46ch; }
+  .dir-mision { padding: var(--s-5) var(--s-6); border-radius: var(--r-panel); background: rgb(255 255 255 / 0.45); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.7); }
+  .dir-mision p { color: var(--grafito); max-width: 52ch; }
+  .dir-mision footer { margin-top: var(--s-3); font: 600 var(--t-label)/1.4 var(--f-sans); color: var(--senal-texto); }
+
+  .dir-panel { padding-top: var(--s-2); }
+  .dir-panel dl { position: relative; z-index: 2; display: grid; gap: var(--s-6); }
+  .dir-panel dt { font: 600 var(--t-label)/1.4 var(--f-sans); color: var(--grafito); padding-bottom: var(--s-2); margin-bottom: var(--s-1); border-bottom: var(--filete) solid rgb(14 18 21 / 0.14); }
+  .dir-panel li { padding: var(--s-2) 0; font-weight: 500; }
+  .dir-panel li + li { border-top: var(--filete) solid rgb(14 18 21 / 0.08); }
+  .dir-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .dir-panel .dir-chips li { padding: 6px 14px; border: 0; border-radius: var(--r-pastilla); background: rgb(255 255 255 / 0.75); box-shadow: inset 0 0 0 1px rgb(14 18 21 / 0.06); font-size: var(--t-small); }
+
+  @media (min-width: 768px) {
+    .dir-panel dl { grid-template-columns: 1fr 1fr; }
+    .dir-valores { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .dir-cuerpo { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--col-gap); margin-top: var(--s-9); }
+  }
+</style>

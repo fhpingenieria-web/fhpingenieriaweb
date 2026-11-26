@@ -1,0 +1,99 @@
+---
+import T from "@/components/ui/T.astro";
+import { sitio } from "@/lib/textos";
+/** Menú de pantalla completa para celular y tablet (Popover API: sin JS para abrir y cerrar). */
+import Logo from "@/components/brand/Logo.astro";
+import Icon from "@/components/ui/Icon.astro";
+import { whatsappUrl, telUrl, telefonoVisible } from "@/lib/contacto";
+
+interface Props {
+  nav: { href: string; label: string; k: string; sub?: { href: string; label: string; k: string }[] }[];
+}
+const { nav } = Astro.props;
+---
+
+<div id="menu-movil" popover class="menu-movil" aria-label="Menú">
+  <div class="menu-movil-cab contenedor">
+    <Logo alto={40} />
+    <button popovertarget="menu-movil" popovertargetaction="hide" aria-label="Cerrar menú" class="menu-movil-cerrar">
+      <Icon name="x" size={26} />
+    </button>
+  </div>
+  <nav class="contenedor menu-movil-nav" aria-label="Principal en celular">
+    <ul role="list">
+      {nav.map((n) => <li>
+        <a href={n.href}><T k={n.k} v={n.label} /></a>
+        {n.sub && <ul role="list" class="menu-movil-sub">{n.sub.map((s) => <li><a href={s.href}><T k={s.k} v={s.label} /></a></li>)}</ul>}
+      </li>)}
+    </ul>
+  </nav>
+  <div class="contenedor menu-movil-pie">
+    <a class="btn" href="/contacto/"><T k="sitio.botonContacto" v={sitio.botonContacto} /> <Icon name="arrow-right" size={18} /></a>
+    <div class="menu-movil-canales">
+      <a href={whatsappUrl()} target="_blank" rel="noopener"><Icon name="whatsapp" size={20} /> WhatsApp</a>
+      <a href={telUrl}><Icon name="phone" size={20} /> {telefonoVisible}</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Cierra el menú al elegir una opción (los enlaces con ancla no recargan la página).
+  const menu = document.getElementById("menu-movil");
+  menu?.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => menu.hidePopover?.()));
+</script>
+
+<style>
+  .menu-movil {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    /* Hoja de vidrio a pantalla completa: la página se ve desenfocada detrás */
+    background: rgb(238 241 245 / 0.96);
+    -webkit-backdrop-filter: blur(30px) saturate(170%);
+    backdrop-filter: blur(30px) saturate(170%);
+    color: var(--tinta);
+    display: none;
+    flex-direction: column;
+    z-index: var(--z-menu);
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out), display var(--dur-2) allow-discrete, overlay var(--dur-2) allow-discrete;
+  }
+  .menu-movil:popover-open { display: flex; opacity: 1; transform: none; }
+  @starting-style {
+    .menu-movil:popover-open { opacity: 0; transform: translateY(-8px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu-movil { transition: none; }
+  }
+  .menu-movil-cab { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; border-bottom: var(--filete) solid var(--linea); }
+  .menu-movil-cerrar { width: 44px; height: 44px; display: grid; place-items: center; color: var(--tinta); }
+  .menu-movil { overflow-y: auto; }
+  .menu-movil-nav { flex: 1; padding-top: var(--s-3); padding-bottom: var(--s-5); }
+  .menu-movil-nav li { border-bottom: var(--filete) solid rgb(14 18 21 / 0.08); }
+  .menu-movil-nav a {
+    display: block;
+    padding: 13px 0;
+    font-size: 1.25rem;
+    font-weight: var(--w-titular);
+    letter-spacing: -0.015em;
+    text-decoration: none;
+  }
+  .menu-movil-sub { padding-bottom: var(--s-2); }
+  .menu-movil-sub li { border: 0; }
+  .menu-movil-nav .menu-movil-sub a { padding: 8px 0 8px var(--s-4); font-size: 1rem; font-weight: 500; }
+  .menu-movil-pie { padding-bottom: max(var(--s-6), env(safe-area-inset-bottom)); display: grid; gap: var(--s-5); }
+  .menu-movil-pie .btn { width: 100%; }
+  .menu-movil-canales { display: flex; gap: var(--s-5); flex-wrap: wrap; }
+  .menu-movil-canales a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; text-decoration: none; }
+</style>
+
+<style>
+  @media (prefers-reduced-transparency: reduce) {
+    .menu-movil { background: var(--papel); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  }
+</style>

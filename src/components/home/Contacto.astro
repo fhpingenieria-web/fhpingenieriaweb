@@ -1,0 +1,121 @@
+---
+import T from "@/components/ui/T.astro";
+/**
+ * Cierre de contacto: sin formulario (decisión del 25/10/2026, para no sumar fricción).
+ * Una acción principal (WhatsApp) y dos canales directos, centrados.
+ */
+import { Picture } from "astro:assets";
+import Icon from "@/components/ui/Icon.astro";
+import fondo from "@/assets/sectores/energia.jpg";
+import AConfirmar from "@/components/ui/AConfirmar.astro";
+import { whatsappUrl, telUrl, telefonoVisible, emailUrl, emailVisible } from "@/lib/contacto";
+import { sitio } from "@/lib/textos";
+
+interface Props {
+  /** Nombre del servicio para el mensaje inicial de WhatsApp (p. ej. "Control documental"). */
+  servicio?: string | undefined;
+  titulo?: string;
+  /** "h1" cuando el bloque es el contenido principal de la página (p. ej. /contacto/). */
+  nivel?: "h1" | "h2";
+}
+const { servicio, titulo, nivel = "h2" } = Astro.props;
+const Titulo = nivel;
+---
+
+<section class="con" id="contacto" aria-labelledby="con-titulo">
+  <div class="con-escena">
+    <Picture
+      class="con-fondo"
+      src={fondo}
+      alt=""
+      formats={["avif", "webp"]}
+      widths={[640, 960, 1400, 2000]}
+      sizes="100vw"
+      loading="lazy" fetchpriority="low"
+      decoding="async"
+    />
+    <div class="con-panel vidrio vidrio--denso">
+      <Titulo id="con-titulo" class:list={["con-titulo", nivel === "h1" ? "t-display" : "t-h2"]}>{titulo ?? <T k="sitio.bloqueContacto.titulo" v={sitio.bloqueContacto.titulo} />}</Titulo>
+      <p class="t-lead con-bajada"><T k="sitio.bloqueContacto.bajada" v={sitio.bloqueContacto.bajada} /></p>
+
+      <a class="btn con-cta" href={whatsappUrl(servicio)} target="_blank" rel="noopener" aria-label={`${sitio.botonContacto} por WhatsApp`}>
+        <T k="sitio.botonContacto" v={sitio.botonContacto} />
+        <Icon name="whatsapp" size={20} />
+      </a>
+
+      <ul role="list" class="con-canales">
+        <li>
+          <a href={telUrl}><Icon name="phone" size={18} />{telefonoVisible}</a>
+        </li>
+        <li>
+          <AConfirmar as="span" nota="Email provisorio">
+            <a href={emailUrl}><Icon name="envelope" size={18} />{emailVisible}</a>
+          </AConfirmar>
+        </li>
+      </ul>
+
+      <p class="con-ambito"><T k="sitio.ambito" v={sitio.ambito} /></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .con { padding: var(--s-5) 12px; }
+  .con-escena {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: calc(var(--r-panel) + 8px);
+    min-height: 640px;
+    display: grid;
+    place-items: center;
+    padding: var(--s-9) var(--s-4);
+    background: var(--linea);
+  }
+  /* En <Picture>, la clase llega al <img> */
+  .con-escena :global(img.con-fondo) { filter: var(--foto-filtro); position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; }
+
+  .con-panel {
+    width: min(100%, 680px);
+    padding: var(--s-8) var(--s-7);
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  .con-panel > * { position: relative; z-index: 2; }
+  .con-titulo { max-width: 16ch; }
+  .con-bajada { margin-top: var(--s-5); max-width: 40ch; }
+  .con-cta { margin-top: var(--s-7); min-width: min(100%, 300px); }
+
+  .con-canales { margin-top: var(--s-5); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-2); }
+  .con-canales a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: var(--r-pastilla);
+    background: rgb(255 255 255 / 0.72);
+    box-shadow: inset 0 0 0 1px rgb(14 18 21 / 0.07), 0 4px 14px -6px rgb(14 18 21 / 0.2);
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+  .con-canales a:hover { background: rgb(255 255 255 / 0.95); }
+  .con-canales :global(.icon) { color: var(--senal-texto); flex: none; }
+  .con-ambito { margin-top: var(--s-5); font-size: var(--t-label); font-weight: 600; color: var(--grafito); }
+
+  @media (min-width: 768px) {
+    .con { padding: var(--s-6) var(--gutter); }
+  }
+  @media (max-width: 599.98px) {
+    .con-escena { min-height: 0; padding: 120px 10px 10px; align-items: end; }
+    .con-panel { padding: var(--s-7) var(--s-5); border-radius: 24px; }
+    .con-cta { width: 100%; }
+    .con-canales { flex-direction: column; width: 100%; }
+    .con-canales a { justify-content: center; width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .con-canales a { transition: none; }
+  }
+</style>

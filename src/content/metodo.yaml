@@ -1,0 +1,74 @@
+# Etapas orientativas de la fuente. A confirmar con Facundo contra la metodología real.
+# Cada bloque es un elemento (la clave de arriba es su identificador: no cambiarla).
+consulta:
+  orden: 1
+  nombre: Consulta
+  descripcion: Escuchamos qué necesitás resolver y en qué etapa está el proyecto, para comprender la necesidad inicial.
+  metaDescripcion: Primera consulta para comprender la necesidad, el contexto y los objetivos técnicos de cada proyecto.
+  introduccion: Todo trabajo comienza por comprender con precisión qué se necesita resolver. En esta instancia inicial escuchamos el planteo, revisamos el contexto disponible y ordenamos las primeras preguntas para orientar el análisis.
+  proposito: Construir una visión compartida de la necesidad, sus antecedentes y las condiciones que pueden influir en el trabajo.
+  actividades:
+    - Conversación inicial sobre el proyecto, la situación actual y los objetivos esperados.
+    - Revisión preliminar de la información disponible y de los principales condicionantes.
+    - Identificación de preguntas, prioridades y próximos pasos para avanzar con criterio.
+  resultado: Una comprensión inicial del problema y una base clara para definir cómo continuar.
+relevamiento:
+  orden: 2
+  nombre: Relevamiento
+  descripcion: Analizamos la información disponible y los requerimientos, e identificamos qué falta y cómo conseguirlo.
+  metaDescripcion: Relevamiento técnico de información, antecedentes, condiciones y requerimientos para establecer una base confiable.
+  introduccion: El relevamiento permite trabajar sobre información ordenada y verificable. Analizamos antecedentes, documentación y condiciones existentes para reconocer el punto de partida real del proyecto.
+  proposito: Reunir y validar los datos necesarios, detectar faltantes y reducir incertidumbres antes de definir o desarrollar una solución.
+  actividades:
+    - Recopilación y análisis de planos, especificaciones, registros y antecedentes disponibles.
+    - Verificación de condiciones y requerimientos técnicos, con visitas o consultas cuando corresponde.
+    - Registro de inconsistencias, información faltante y aspectos que requieren confirmación.
+  resultado: Una base técnica consolidada que permite tomar decisiones con mayor respaldo y trazabilidad.
+alcance:
+  orden: 3
+  nombre: Definición del alcance
+  descripcion: Acordamos las tareas y los entregables, para que quede claro qué se va a hacer antes de empezar.
+  metaDescripcion: Definición clara de tareas, límites, responsabilidades y entregables antes de iniciar el trabajo técnico.
+  introduccion: Con la necesidad comprendida y la información relevada, delimitamos el trabajo a realizar. Una definición precisa evita ambigüedades y alinea expectativas desde el comienzo.
+  proposito: Establecer qué se hará, con qué información, bajo qué criterios y cuáles serán los resultados esperados.
+  actividades:
+    - Delimitación de tareas, especialidades involucradas y límites del servicio.
+    - Definición de entregables, instancias de revisión y criterios de aceptación.
+    - Acuerdo sobre responsabilidades, interlocutores, plazos y documentación de referencia.
+  resultado: Un alcance comprensible y verificable que funciona como marco para el desarrollo del trabajo.
+desarrollo:
+  orden: 4
+  nombre: Desarrollo
+  descripcion: Realizamos el servicio acordado, con seguimiento y registro de las observaciones durante el trabajo.
+  metaDescripcion: Desarrollo del servicio técnico acordado con coordinación, revisión y registro de decisiones y observaciones.
+  introduccion: En esta etapa ejecutamos las tareas definidas en el alcance, aplicando criterios técnicos y manteniendo una comunicación ordenada durante todo el proceso.
+  proposito: Transformar la información y los requisitos del proyecto en análisis, definiciones y entregables técnicamente fundamentados.
+  actividades:
+    - Ejecución de cálculos, evaluaciones, revisiones, inspecciones o tareas acordadas.
+    - Coordinación de consultas e interfaces con los participantes involucrados.
+    - Documentación de criterios, decisiones, observaciones y cambios relevantes.
+  resultado: El trabajo técnico desarrollado de acuerdo con el alcance y respaldado por registros claros.
+seguimiento:
+  orden: 5
+  nombre: Seguimiento
+  descripcion: Verificamos avances, registramos observaciones y damos continuidad a los compromisos hasta su resolución.
+  metaDescripcion: Seguimiento técnico de avances, observaciones, compromisos y desvíos con información clara y trazable.
+  introduccion: El seguimiento sostiene la continuidad entre lo planificado y lo ejecutado. Revisamos avances, identificamos desvíos y mantenemos visibles las observaciones y los compromisos pendientes.
+  proposito: Acompañar la evolución del trabajo y facilitar decisiones oportunas con información actualizada.
+  actividades:
+    - Revisión periódica del estado de las tareas y los hitos acordados.
+    - Registro y clasificación de observaciones, responsables, fechas y pendientes.
+    - Comunicación de desvíos y verificación de las acciones adoptadas para resolverlos.
+  resultado: Una visión actualizada del avance y un registro trazable de decisiones, observaciones y compromisos.
+entrega:
+  orden: 6
+  nombre: Entrega
+  descripcion: Consolidamos los resultados, revisamos los pendientes y presentamos la documentación final de manera ordenada.
+  metaDescripcion: Entrega técnica ordenada, revisada y trazable, con resultados, documentación y pendientes claramente identificados.
+  introduccion: El cierre reúne el trabajo realizado y facilita su comprensión y uso posterior. Antes de entregar, verificamos la documentación y dejamos identificados los resultados y cualquier aspecto pendiente.
+  proposito: Cerrar el alcance acordado con información consistente, accesible y preparada para la siguiente etapa del proyecto.
+  actividades:
+    - Revisión final de entregables, versiones y correspondencia con el alcance acordado.
+    - Consolidación de resultados, observaciones cerradas y pendientes identificados.
+    - Presentación y entrega ordenada de la documentación técnica correspondiente.
+  resultado: Un cierre documentado y trazable, con entregables listos para su revisión, aprobación o utilización.

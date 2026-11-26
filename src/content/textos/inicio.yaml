@@ -1,0 +1,75 @@
+# Textos de la página de inicio, en el orden en que aparecen.
+descripcionGoogle: Inspección técnica de obras, control documental, seguimiento de proyectos y consultoría de ingeniería para proyectos industriales y de infraestructura en Argentina y el Mercosur.
+hero:
+  titular: Tu obra, como fue proyectada.
+  bajada: Consultoría de ingeniería, inspección técnica y control documental para proyectos industriales y de infraestructura.
+  botonSecundario: Ver servicios
+enlaceServicio: Ver alcance y entregables
+grillaServicios:
+  titulo: Servicios
+grillaInstitucional:
+  titulo: Institucional
+credenciales:
+  - dato: Más de 20 años de experiencia profesional
+    detalle: Trayectoria del director técnico, Ing. Facundo Hernán Porta.
+  - dato: Oil & Gas, Industria e Infraestructura
+    detalle: Sectores en los que trabajamos.
+  - dato: Antes, durante y al cierre
+    detalle: Consultoría, cálculo, inspección, seguimiento y control documental.
+  - dato: Argentina y Mercosur
+    detalle: Ámbito de trabajo.
+situaciones:
+  titulo: Cuándo conviene sumar una mirada técnica
+  bajada: Situaciones frecuentes en proyectos industriales y de infraestructura, y el servicio que las aborda.
+  filas:
+    - servicio: inspeccion-tecnica-de-obras
+      enlace: Inspección técnica de equipos
+      texto: Lo ejecutado no coincide con lo especificado, y se detecta tarde.
+    - servicio: control-documental
+      enlace: Proyectos ejecutivos
+      texto: La documentación está dispersa, sin versiones claras ni registro de cierre.
+    - servicio: seguimiento-de-proyectos
+      enlace: Seguimiento de proyectos
+      texto: Las observaciones se registran, pero nadie sigue su cierre.
+    - servicio: consultoria-de-ingenieria
+      enlace: Consultoría de ingeniería
+      texto: Hay que decidir sin un análisis técnico que respalde la decisión.
+sectores:
+  titulo: Sectores en los que trabajamos
+  bajada: Tres sectores donde la precisión, la seguridad y la trazabilidad no son opcionales.
+  nota: Imágenes ilustrativas.
+  enlaceObras: Ver las obras de FHP
+obras:
+  titulo: Obras y antecedentes
+  bajada: Proyectos en los que participamos, con el rol, las tareas y el período de cada uno.
+  boton: Ver las obras
+metodo:
+  titulo: Un proceso claro, de principio a fin
+  bajada: El alcance de cada trabajo se acuerda antes de empezar. Lo que hacemos queda documentado.
+direccionTecnica:
+  nombre: Ing. Facundo Hernán Porta
+  experiencia: Más de 20 años de experiencia profesional.
+  rol: Fundador y responsable técnico de FHP.
+  texto: "FHP nace de la trayectoria profesional de su fundador, que dirige cada trabajo con una mirada integral: comprender los requerimientos, ordenar la información, acompañar el trabajo técnico y facilitar el seguimiento de los compromisos acordados."
+  mision: Brindar servicios de ingeniería y consultoría con rigor técnico, responsabilidad y atención a las necesidades de cada cliente, contribuyendo al control y desarrollo ordenado de sus proyectos.
+  rotuloMision: Misión de FHP
+  tituloEspecialidades: Especialidades
+  especialidades:
+    - Ingeniería mecánica
+    - Mantenimiento industrial
+    - Inspección técnica
+    - Gestión de proyectos
+  tituloParticipacion: Participación
+  participacion:
+    - Planificación
+    - Seguimiento
+    - Coordinación
+    - Documentación técnica
+  tituloValores: Valores
+  valores:
+    - Integridad
+    - Rigor técnico
+    - Seguridad
+    - Compromiso
+    - Transparencia
+    - Mejora continua

@@ -1,0 +1,25 @@
+titulo: Consultoría de Ingeniería
+nombreCorto: Consultoría de ingeniería
+orden: 1
+etapa: antes
+resumen: Proyectos ejecutivos, análisis de necesidades, evaluación de alternativas y soporte técnico para la toma de decisiones en proyectos industriales.
+definicion: >-
+  La consultoría de ingeniería aporta criterio técnico para decidir. FHP ingeniería calcula y analiza la necesidad, evalúa técnicamente las alternativas y brinda soporte técnico para que las decisiones en los proyectos se tomen con toda la información ordenada y con los fundamentos claros, antes de comprometer tiempo y recursos.
+metaDescripcion: Consultoría de ingeniería para proyectos industriales. Análisis de necesidades, evaluación de alternativas y soporte técnico para la toma de decisiones.
+incluye:
+  - Análisis de necesidades
+  - Evaluación de alternativas técnicas
+  - Soporte técnico para la toma de decisiones
+situaciones:
+  - Cuando tenés que elegir entre varias soluciones técnicas.
+  - Cuando necesitás una segunda opinión técnica antes de comprometer recursos y divisas
+  - Cuando el problema no se encuentra en etapa de definición y hay que ordenarlo antes de tomar una definición del mismo.
+entregables:
+  aConfirmar: true
+  items:
+    - Informe técnico con alternativas evaluadas
+faq:
+  - pregunta: ¿Qué información hace falta para empezar?
+    respuesta: >-
+      Una descripción de la necesidad, la documentación disponible y las restricciones conocidas del proyecto. En la etapa de relevamiento se identifican la necesidad, se observan con qué recursos se disponen, se releva la información faltante, se acciona para conseguirla y se realizan los cálculos correspondientes.
+actualizado: 2026-10-22

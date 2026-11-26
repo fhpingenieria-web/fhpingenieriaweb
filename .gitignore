@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.DS_Store
+.playwright-mcp/
+
+# Herramientas de terceros descargadas localmente (no van al repositorio)
+vendor/
+
+# Videos fuente pesados (la versión optimizada está en public/video)
+research/videos/
+
+# Material de investigación y herramientas locales (no van al repositorio)
+research/
+.claude/
+respaldos/
+.netlify/
+
+# Videos de presentación (skill brag)
+brag-output*/

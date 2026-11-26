@@ -1,0 +1,63 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PLANTILLA DE OBRA. No se publica (las carpetas que empiezan con "_" se ignoran).
+#
+# Para cargar una obra:
+#   1. Copiar esta carpeta y renombrarla con el nombre corto de la obra, sin espacios
+#      ni acentos. Ej.: src/content/obras/planta-compresora-anelo/
+#      Ese nombre es la dirección de la página: /obras/planta-compresora-anelo/
+#   2. Poner las fotos dentro de esa carpeta (JPG o PNG, ideal 2000 px de ancho o más).
+#      Nombrarlas en orden: 01.jpg, 02.jpg, 03.jpg...
+#   3. Completar los campos de abajo. Solo datos verificables.
+#   4. Cambiar "autorizada" y "publicada" a true cuando corresponda.
+#   5. La primera vez: poner secciones.obras = true en src/data/empresa.ts
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Nombre de la obra o descripción breve (máx. 90 caracteres)
+titulo: Nombre o descripción breve de la obra
+
+# Una o dos oraciones: qué era la obra y qué hizo FHP (máx. 320 caracteres)
+resumen: Qué era la obra y cuál fue la participación de FHP.
+
+# energia | industria | infraestructura
+sector: industria
+
+ubicacion: Ciudad, provincia
+periodo: 2024 - 2025
+rol: Inspección técnica
+
+# Opcional. Solo si el cliente autorizó mencionarlo por escrito. Si no, borrar la línea.
+# cliente: Nombre del cliente
+
+responsabilidades:
+  - Primera responsabilidad
+  - Segunda responsabilidad
+
+tareas:
+  - Inspección o tarea realizada
+  - Otra tarea realizada
+
+# Opcional. Solo resultados comprobables. Si no hay, dejar: resultados: []
+resultados: []
+
+# Uno o más de: consultoria-de-ingenieria, calculo-y-evaluacion-tecnica,
+# inspeccion-tecnica-de-obras, seguimiento-de-proyectos, control-documental
+servicios:
+  - inspeccion-tecnica-de-obras
+
+# Foto principal (la que aparece en listados y en la banda curva)
+portada:
+  src: ./01.jpg
+  alt: Descripción de lo que muestra la foto, para personas que no la ven
+
+# Resto de las fotos. "pie" es opcional y aparece debajo de la foto ampliada.
+fotos:
+  - src: ./02.jpg
+    alt: Descripción de la foto
+    pie: Comentario breve opcional
+
+# Autorización del cliente para publicar fotos y datos
+autorizada: false
+# true para que aparezca en la web
+publicada: false
+# Orden en el listado (menor número = primero)
+orden: 100

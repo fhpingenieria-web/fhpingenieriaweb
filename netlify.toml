@@ -1,0 +1,10 @@
+# Netlify reconstruye el sitio en cada cambio del repositorio (por ejemplo, al guardar textos desde el panel).
+[build]
+  command = "npm test && node scripts/vista-previa.mjs"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Al pasar al dominio definitivo: cambiar SITE_URL y quitar VISTA_PREVIA para que Google pueda indexarlo.
+  SITE_URL = "https://fhp-boceto.netlify.app"
+  VISTA_PREVIA = "1"

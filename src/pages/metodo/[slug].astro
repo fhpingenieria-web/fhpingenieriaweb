@@ -1,0 +1,128 @@
+---
+import { Picture } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Base from "@/layouts/Base.astro";
+import Migas from "@/components/layout/Migas.astro";
+import Contacto from "@/components/home/Contacto.astro";
+import Icon from "@/components/ui/Icon.astro";
+import T from "@/components/ui/T.astro";
+import fondo from "@/assets/metodo-fondo.jpg";
+
+export async function getStaticPaths() {
+  const etapas = (await getCollection("metodo")).sort((a, b) => a.data.orden - b.data.orden);
+
+  return etapas.map((etapa, indice) => ({
+    params: { slug: etapa.id },
+    props: {
+      etapa,
+      siguiente: etapas[(indice + 1) % etapas.length]!,
+    },
+  }));
+}
+
+interface Props {
+  etapa: CollectionEntry<"metodo">;
+  siguiente: CollectionEntry<"metodo">;
+}
+
+const { etapa, siguiente } = Astro.props;
+const d = etapa.data;
+---
+
+<Base titulo={d.nombre} descripcion={d.metaDescripcion} imagen="/og/metodo.png">
+  <article>
+    <header class="md-cab">
+      <div class="md-escena">
+        <Picture class="md-fondo" src={fondo} alt="" formats={["avif", "webp"]} widths={[640, 960, 1280, 1600]} sizes="100vw" loading="eager" fetchpriority="high" />
+        <div class="md-panel vidrio vidrio--denso">
+          <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: "Método", href: "/metodo/" }, { nombre: d.nombre }]} />
+          <p class="t-label">Etapa {String(d.orden).padStart(2, "0")}</p>
+          <h1 class="t-display md-titulo"><T k={`metodo.${etapa.id}.nombre`} v={d.nombre} /></h1>
+          <p class="md-intro"><T k={`metodo.${etapa.id}.introduccion`} v={d.introduccion} /></p>
+          <a class="btn" href="#contacto">Consultar sobre esta etapa <Icon name="arrow-right" size={18} /></a>
+        </div>
+      </div>
+    </header>
+
+    <div class="md-cuerpo contenedor seccion">
+      <section class="md-proposito" aria-labelledby="md-proposito">
+        <p class="t-label">Propósito</p>
+        <h2 id="md-proposito" class="md-h2">Qué buscamos en esta etapa</h2>
+        <p><T k={`metodo.${etapa.id}.proposito`} v={d.proposito} /></p>
+      </section>
+
+      <section class="md-actividades" aria-labelledby="md-actividades">
+        <p class="t-label">Desarrollo</p>
+        <h2 id="md-actividades" class="md-h2">Qué comprende</h2>
+        <ul role="list" class="md-lista">
+          {d.actividades.map((item, i) => <li><Icon name="check" size={18} /><T k={`metodo.${etapa.id}.actividades.${i}`} v={item} /></li>)}
+        </ul>
+      </section>
+    </div>
+
+    <section class="md-resultado contenedor" aria-labelledby="md-resultado">
+      <div>
+        <p class="t-label">Resultado esperado</p>
+        <h2 id="md-resultado" class="t-h2">Una base clara para continuar</h2>
+      </div>
+      <p><T k={`metodo.${etapa.id}.resultado`} v={d.resultado} /></p>
+    </section>
+
+    <nav class="md-siguiente contenedor" aria-label="Siguiente etapa del método">
+      <a href={`/metodo/${siguiente.id}/`}>
+        <span>
+          <span class="t-label">Siguiente etapa</span>
+          <strong><T k={`metodo.${siguiente.id}.nombre`} v={siguiente.data.nombre} /></strong>
+        </span>
+        <Icon name="arrow-right" size={28} />
+      </a>
+    </nav>
+  </article>
+
+  <Contacto servicio={d.nombre} />
+</Base>
+
+<style>
+  .md-cab { padding: var(--s-4) 12px 0; }
+  .md-escena { position: relative; isolation: isolate; overflow: hidden; min-height: min(780px, 100svh); border-radius: var(--r-panel); display: grid; align-items: end; padding: var(--s-8) 12px 12px; background: var(--banda); }
+  .md-escena :global(img.md-fondo) { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; filter: var(--foto-filtro); transform: scale(1.05); }
+  .md-escena::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgb(6 18 40 / 0.28), transparent 70%); }
+  .md-panel { width: min(100%, 760px); padding: var(--s-6) var(--s-5); display: grid; justify-items: start; gap: var(--s-4); }
+  .md-panel > * { position: relative; z-index: 2; }
+  .md-titulo { max-width: 16ch; }
+  .md-intro { max-width: 64ch; color: var(--grafito); line-height: 1.65; }
+
+  .md-cuerpo { display: grid; gap: var(--s-8) var(--col-gap); }
+  .md-proposito, .md-actividades { display: grid; align-content: start; gap: var(--s-3); padding-top: var(--s-4); border-top: var(--filete-fuerte) solid var(--senal); }
+  .md-h2 { font-size: var(--t-3); font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; }
+  .md-proposito > p:last-child { margin-top: var(--s-3); color: var(--grafito); line-height: 1.7; max-width: 58ch; }
+  .md-lista { margin-top: var(--s-3); }
+  .md-lista li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--s-3); padding: var(--s-4) 0; color: var(--grafito); }
+  .md-lista li + li { border-top: var(--filete) solid rgb(14 18 21 / 0.1); }
+  .md-lista :global(.icon) { color: var(--senal-texto); transform: translateY(4px); }
+
+  .md-resultado { padding-bottom: var(--seccion); display: grid; gap: var(--s-5) var(--col-gap); }
+  .md-resultado > div { display: grid; gap: var(--s-3); }
+  .md-resultado > p { align-self: end; max-width: 62ch; padding: var(--s-5); border-left: var(--filete-fuerte) solid var(--senal); background: var(--banda); color: var(--grafito); line-height: 1.7; }
+
+  .md-siguiente { padding-bottom: var(--seccion); }
+  .md-siguiente a { min-height: 150px; display: flex; align-items: center; justify-content: space-between; gap: var(--s-5); padding: var(--s-6); border-radius: var(--r-panel); background: var(--tinta); color: #fff; text-decoration: none; }
+  .md-siguiente a > span { display: grid; gap: var(--s-2); }
+  .md-siguiente strong { font-size: var(--t-3); font-weight: var(--w-titular); line-height: 1.12; }
+  .md-siguiente :global(.t-label) { color: rgb(255 255 255 / 0.72); }
+  .md-siguiente :global(.icon) { flex: none; color: var(--senal); transition: transform var(--dur-2) var(--ease-out); }
+  .md-siguiente a:hover :global(.icon), .md-siguiente a:focus-visible :global(.icon) { transform: translateX(5px); }
+
+  @media (min-width: 768px) {
+    .md-cab { padding: var(--s-5) var(--gutter) 0; }
+    .md-escena { padding: var(--s-9) var(--s-5) var(--s-5); }
+    .md-panel { padding: var(--s-7); }
+    .md-cuerpo, .md-resultado { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .md-escena { align-items: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .md-siguiente :global(.icon) { transition: none; }
+  }
+</style>

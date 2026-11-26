@@ -1,0 +1,381 @@
+/* =========================================================================
+   FHP · Sistema visual "Vidrio"
+   Fotografía industrial real como fondo; los controles y paneles flotan encima
+   como vidrio esmerilado (aproximación web del Liquid Glass de Apple: Apple no
+   publica una versión para la web; esto es backdrop-filter + bordes con luz).
+   Superficie hormigón claro, tinta, un único color de señal.
+   ========================================================================= */
+
+@layer reset, tokens, base, layout, components, utilities;
+
+/* ---------- Tokens ---------- */
+@layer tokens {
+  :root {
+    /* Sitio siempre claro (decisión del cliente, 22/10/2026). */
+    color-scheme: light;
+
+    /* Color (mantener en sincronía con scripts/build-marca.mjs) */
+    /* Claro pero con cuerpo: gris hormigón, no blanco. */
+    --papel: #eef1f5;
+    --superficie: #f8f9fb;
+    --banda: #e5e7eb;
+    --tinta: #0a1f3f;
+    /* Jerarquía por opacidad de la tinta, no por otro tono (≈ 7:1 sobre papel). */
+    --grafito: #4b5563;
+    --linea: #c9d0da;
+    --linea-suave: #dde2e9;
+    /* Acento: azul acero de la identidad FHp. Gráficos y marcas (contraste no textual ≥ 3:1). */
+    --senal: #3f8fcc;
+    /* Acento para texto y botones: azul profundo (≥ 4,5:1 sobre papel y con blanco). */
+    --senal-texto: #0b3d91;
+    --sobre-tinta: #ffffff;
+    /* Texto secundario sobre fondo tinta (7:1) */
+    --sobre-tinta-2: #c7d3e2;
+    /* Velo del visor de fotos */
+    --velo: rgb(10 31 63 / 0.94);
+    /* Mismo tratamiento en todas las fotos, para que parezcan de una misma serie aunque vengan de fuentes distintas */
+    --foto-filtro: saturate(0.62) contrast(1.05);
+    --velo-control: rgb(10 31 63 / 0.6);
+
+    /* Tipografía · escala modular de cuarta justa (1,333) sobre 17 px.
+       Cada paso es fluido entre su valor en celular y en escritorio. */
+    --f-sans: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+    /* Titular del inicio */
+    --f-titular: var(--f-sans);
+
+    --t-label: 0.8125rem;                                   /* 13 · 17 ÷ 1,333 */
+    --t-small: 0.9375rem;                                   /* 15 · medio paso */
+    --t-0: 1.0625rem;                                       /* 17 · cuerpo */
+    --t-1: clamp(1.125rem, 1.05rem + 0.35vw, 1.4167rem);    /* 18 → 22,7 */
+    --t-2: clamp(1.375rem, 1.15rem + 0.95vw, 1.8889rem);    /* 22 → 30,2 */
+    --t-3: clamp(1.75rem, 1.35rem + 1.7vw, 2.5185rem);      /* 28 → 40,3 */
+    --t-4: clamp(2.125rem, 1.45rem + 2.9vw, 3.3580rem);     /* 34 → 53,7 */
+    --t-5: clamp(2.5rem, 1.5rem + 4.3vw, 4.4774rem);        /* 40 → 71,6 */
+    --t-6: clamp(2.875rem, 1.45rem + 6.1vw, 5.9699rem);     /* 46 → 95,5 */
+
+    /* Alias de rol (los componentes usan estos) */
+    --fs-display: var(--t-5);
+    --fs-h2: var(--t-4);
+    --fs-h3: var(--t-2);
+    --fs-lead: var(--t-1);
+    --fs-body: var(--t-0);
+    --fs-small: var(--t-small);
+    --fs-label: var(--t-label);
+
+    --lh-tight: 1;
+    --lh-heading: 1.04;
+    --lh-body: 1.6;
+    /* Peso y ancho de titulares: grotesca de ancho normal, peso medio. Sin negrita. */
+    /* Grotesca de ancho normal, peso firme: tono institucional (referencias: IATASA, Serman, HYTSA) */
+    --w-titular: 700;
+    
+    /* Espacio · unidad de 8 px (4 y 12 solo como medias unidades internas) */
+    --u: 8px;
+    --gutter: 16px;          /* margen exterior */
+    --col-gap: 16px;         /* medianil entre columnas */
+    --max: 1376px;           /* 12 columnas + 11 medianiles de 32 */
+    --seccion: 56px;         /* aire vertical entre secciones (celular; crece en pantallas grandes) */
+    --s-1: 4px;
+    --s-2: 8px;
+    --s-3: 12px;
+    --s-4: 16px;
+    --s-5: 24px;
+    --s-6: 32px;
+    --s-7: 48px;
+    --s-8: 64px;
+    --s-9: 96px;
+
+    --franja-h: 34px;        /* franja superior con mail y teléfono */
+    --header-h: 80px;        /* barra con logo y menú */
+    --filete: 1px;
+    --filete-fuerte: 1.5px;
+
+    /* Forma: todo redondeado, como el material de vidrio */
+    /* Forma sobria: esquinas apenas suavizadas */
+    --r-pastilla: 3px;       /* botones, chips */
+    --r-panel: 6px;          /* paneles y tarjetas */
+    --r-foto: 4px;           /* fotos */
+
+    /* Vidrio claro: sobre fotos o sobre el hormigón */
+    --vidrio-fondo: rgb(246 247 246 / 0.9);
+    --vidrio-fondo-alto: rgb(246 247 246 / 0.94); /* casi superficie sólida: contraste estable sobre cualquier foto */
+    --vidrio-borde: rgb(255 255 255 / 0.55);
+    --vidrio-desenfoque: blur(16px) saturate(120%);
+    --vidrio-sombra: 0 1px 2px rgb(10 31 63 / 0.06), 0 8px 24px -12px rgb(10 31 63 / 0.18);
+    /* Vidrio entintado: acción principal */
+    --vidrio-tinta: #0b3d91;
+
+    /* Movimiento */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --dur-1: 160ms;
+    --dur-2: 320ms;
+    --dur-3: 700ms;
+
+    /* Capas */
+    --z-header: 50;
+    --z-menu: 60;
+  }
+  @media (min-width: 768px) {
+    :root { --gutter: 32px; --col-gap: 24px; --seccion: 96px; }
+  }
+  @media (min-width: 1024px) {
+    :root { --gutter: 48px; --col-gap: 32px; --seccion: 128px; }
+  }
+  @media (min-width: 1440px) {
+    :root { --gutter: 64px; }
+  }
+}
+
+/* ---------- Reset ---------- */
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    interpolate-size: allow-keywords;
+    hanging-punctuation: first last;
+  }
+  img, picture, svg, video, canvas { display: block; max-width: 100%; }
+  img { height: auto; }
+  input, button, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; background: none; border: 0; padding: 0; }
+  ul[role="list"], ol[role="list"] { list-style: none; padding: 0; }
+  p, li, dd { text-wrap: pretty; }
+  h1, h2, h3, h4 { text-wrap: balance; font-weight: inherit; }
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(60px + var(--s-5));
+    background: var(--papel);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--papel);
+    color: var(--tinta);
+    font-family: var(--f-sans);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern", "liga";
+  }
+  ::selection { background: var(--senal); color: var(--tinta); }
+  /* Superficies del navegador con la paleta de la marca */
+  :root { caret-color: var(--senal); accent-color: var(--tinta); scrollbar-color: #9aa3a9 var(--papel); }
+  ::placeholder { color: #5f6a73; opacity: 1; }
+
+  a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+  a:hover { text-decoration-color: var(--senal); }
+
+  :focus-visible {
+    outline: 2px solid var(--senal);
+    outline-offset: 3px;
+  }
+
+  strong, b { font-weight: 620; }
+
+  /* Transición entre páginas (View Transitions nativas entre documentos) */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 260ms;
+    animation-timing-function: var(--ease-out);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition { navigation: none; }
+  }
+}
+
+/* ---------- Layout ---------- */
+/* Grilla modular de 12 columnas. En celular todo ocupa el ancho completo;
+   desde 768 px cada componente asigna columnas con grid-column. */
+@layer layout {
+  .contenedor {
+    width: 100%;
+    max-width: calc(var(--max) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  .seccion { padding-block: var(--seccion); }
+  .pagina-migas { padding-top: var(--s-5); }
+  .grilla {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--col-gap);
+  }
+  .grilla > * { grid-column: 1 / -1; min-width: 0; }
+}
+
+/* ---------- Componentes base ---------- */
+@layer components {
+  /* Titulares */
+  .t-display, .t-h2 {
+    font-family: var(--f-sans);
+    font-weight: var(--w-titular);
+    letter-spacing: -0.03em;
+  }
+  .t-display { font-size: var(--fs-display); line-height: var(--lh-tight); }
+  .t-h2 { font-size: var(--fs-h2); line-height: var(--lh-heading); letter-spacing: -0.026em; }
+  .t-lead {
+    font-size: var(--fs-lead);
+    line-height: 1.45;
+    color: var(--grafito);
+    max-width: 44ch;
+  }
+  /* Etiqueta técnica (mono). Uso medido: rótulos, códigos y metadatos, no sobre cada título. */
+  /* Metadato: rótulos de columnas y datos. Nunca como etiqueta encima de un título. */
+  .t-label {
+    font-family: var(--f-sans);
+    font-size: var(--t-label);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--grafito);
+  }
+
+  /* ---------- Material vidrio ----------
+     Cuatro ingredientes: desenfoque, translucidez, borde con luz y relieve.
+     El aro de luz (::before) y el grano anti-bandas (::after) son capas propias. */
+  .vidrio {
+    position: relative;
+    isolation: isolate;
+    background: var(--vidrio-fondo);
+    border-radius: var(--r-panel);
+    box-shadow: var(--vidrio-sombra);
+  }
+  .vidrio::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 1px;
+    background: rgb(10 31 63 / 0.08); /* filete sobrio en todo el borde */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .vidrio::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Vidrio más denso: texto largo sobre fotografía */
+  .vidrio--denso { background: var(--vidrio-fondo-alto); }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .vidrio { background: rgb(243 244 243 / 0.94); }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .vidrio { background: var(--superficie); -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .vidrio::after { display: none; }
+  }
+
+  /* ---------- Botones: rectángulos sólidos, sin efectos ---------- */
+  .btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-3);
+    min-height: 52px;
+    padding: 0 22px 0 24px;
+    letter-spacing: 0.01em;
+    border-radius: var(--r-pastilla);
+    background: var(--vidrio-tinta);
+    color: var(--sobre-tinta);
+    font-family: var(--f-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 0;
+    box-shadow: none;
+    transition: background-color var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+  }
+  /* Hover: el vidrio se tiñe del naranja de señal; el texto pasa a tinta (5:1). */
+  .btn:hover {
+    background-color: var(--tinta);
+    color: var(--sobre-tinta);
+    text-decoration: none;
+  }
+  .btn:active { transform: translateY(0) scale(0.98); }
+  .btn .icon { transition: transform var(--dur-2) var(--ease-out); flex: none; }
+  .btn:hover .icon { transform: translateX(3px); }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .btn { background-color: var(--senal-texto); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn, .btn .icon { transition: none; }
+  }
+
+  /* Enlace con flecha */
+  .enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--linea);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--dur-1);
+  }
+  .enlace:hover { text-decoration-color: var(--senal); }
+  .enlace .icon { transition: transform var(--dur-2) var(--ease-out); }
+  .enlace:hover .icon { transform: translate(2px, -2px); }
+}
+
+/* ---------- Utilidades ---------- */
+@layer utilities {
+  /* Entrada al hacer scroll, ligada a la vista (sin JS). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      /* Filete que se dibuja de izquierda a derecha al entrar en pantalla */
+      [data-trazar] {
+        transform-origin: left;
+        animation: trazar linear both;
+        animation-timeline: view();
+        animation-range: entry 10% cover 40%;
+      }
+      @keyframes trazar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    }
+  }
+
+  .sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0;
+  }
+  .saltar {
+    position: absolute;
+    left: var(--s-4);
+    top: -100px;
+    z-index: 100;
+    background: var(--tinta);
+    color: var(--sobre-tinta);
+    padding: var(--s-3) var(--s-4);
+    font-weight: 600;
+  }
+  .saltar:focus { top: var(--s-4); }
+}

@@ -1,0 +1,34 @@
+titulo: Inspección Técnica de Equipos
+nombreCorto: Inspección técnica
+orden: 3
+etapa: durante
+resumen: Seguimiento de los trabajos y revisión de conformidades respecto de los planos, especificaciones técnicas y requisitos aplicables.
+definicion: >-
+  La inspección técnica de equipos es el control de los trabajos durante su fabricación. FHP Ingeniería sigue el avance, registra las observaciones y revisa la conformidad de lo ejecutado respecto de los planos, especificaciones técnicas y requisitos aplicables de fabricación, para que los desvíos se detecten a tiempo y queden documentados hasta el cierre del informe.
+metaDescripcion: Inspección técnica de equipos en Argentina y Mercosur. Seguimiento en fábrica, ensayos, registro de observaciones y revisión de conformidad.
+incluye:
+  - Seguimiento de los trabajos en fábrica y ensayos aplicados
+  - Registro de observaciones y de su estado
+  - Revisión de conformidad respecto de planos y especificaciones
+  - Verificación frente a los requisitos aplicables al proyecto
+situaciones:
+  - Cuando necesitás verificar que lo ejecutado coincida con lo especificado.
+  - Cuando querés detectar desvíos durante la fabricación y no al cierre.
+  - Cuando necesitás un registro ordenado de observaciones y de cómo se resolvieron.
+entregables:
+  aConfirmar: true
+  items:
+    - Registro de observaciones
+    - Informes de inspección
+    - Revisión de conformidad documentada
+faq:
+  - pregunta: ¿Qué se controla en una inspección técnica?
+    respuesta: >-
+      Se controla que los trabajos ejecutados respondan a los planos, las especificaciones técnicas y los requisitos aplicables al proyecto. Cada diferencia se registra como observación y se sigue hasta su cierre.
+  - pregunta: ¿En qué se diferencia de un control documental?
+    respuesta: >-
+      La inspección técnica trabaja sobre lo que se ejecuta en planta. El control documental trabaja sobre la documentación del proyecto: versiones, entregables, observaciones y registros de cierre. Son complementarios y pueden contratarse juntos.
+  - pregunta: ¿Cómo se define el alcance de la inspección?
+    respuesta: >-
+      Se acuerda con cada cliente antes de empezar: qué trabajos se inspeccionan, contra qué documentación se verifican y qué registros se entregan.
+actualizado: 2026-10-22

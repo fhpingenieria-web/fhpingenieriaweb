@@ -1,0 +1,13 @@
+---
+/**
+ * Marca semántica de contenido provisional. No se ve en pantalla (ni en desarrollo):
+ * el seguimiento de lo que falta confirmar se hace con `npm run pendientes`.
+ */
+interface Props {
+  activo?: boolean;
+  nota?: string;
+  as?: "div" | "span";
+}
+---
+
+<slot />

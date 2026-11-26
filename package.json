@@ -1,0 +1,39 @@
+{
+  "name": "fhp-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sitio web de FhP Consultora e Ingeniería",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "marca": "node scripts/build-marca.mjs",
+    "pendientes": "node scripts/check-pendientes.mjs",
+    "og": "node scripts/build-og.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@netlify/blobs": "^11.1.7",
+    "@netlify/functions": "^6.0.3",
+    "@phosphor-icons/core": "^2.1.1",
+    "astro": "^7.4.2",
+    "gsap": "^3.15.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/chivo-mono": "^5.3.0",
+    "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+    "fontkit": "^2.0.4",
+    "lighthouse": "^12.8.2",
+    "netlify-cli": "^27.14.2",
+    "sharp": "^0.35.5",
+    "typescript": "^6.0.3"
+  }
+}

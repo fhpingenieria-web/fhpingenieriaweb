@@ -1,0 +1,64 @@
+---
+/**
+ * Banda curva de fotografías (adaptación del "Tilted Grid Hero" a Astro, sin React).
+ * Una fila de fotos recorre el interior de un cilindro: el centro mira de frente,
+ * los extremos se curvan hacia el visitante y se desvanecen. Decorativa (aria-hidden):
+ * el contenido real de cada obra está en el listado.
+ */
+import { getImage } from "astro:assets";
+import type { Foto } from "@/lib/obras";
+
+interface Props {
+  fotos: Foto[];
+  /** Segundos que tarda la fila en avanzar una foto. */
+  velocidad?: number;
+  /** Alto de cada foto, en % del alto de la banda. */
+  altoFoto?: number;
+  relacion?: number;
+  separacion?: number;
+  /** Altura del eje, en % del alto. */
+  eje?: number;
+  /** Cuánto se curvan los extremos, en grados (5 a 85). */
+  curva?: number;
+  /** Ancho del desvanecido en cada extremo, en %. */
+  desvanecido?: number;
+  class?: string;
+}
+
+const {
+  fotos,
+  velocidad = 4.5,
+  altoFoto = 52,
+  relacion = 3 / 2,
+  separacion = 6,
+  eje = 50,
+  curva = 72,
+  desvanecido = 12,
+  class: clase,
+} = Astro.props;
+
+const imagenes = await Promise.all(
+  fotos.map(async (f) => {
+    const r = await getImage({ src: f.src, width: 960, format: "webp", quality: 72 });
+    return { src: r.src };
+  }),
+);
+const datos = JSON.stringify({ imagenes, velocidad, altoFoto, relacion, separacion, eje, curva, desvanecido });
+---
+
+<div class:list={["banda", clase]} data-banda={datos} aria-hidden="true">
+  <slot />
+</div>
+
+<script>
+  import { iniciarBandas } from "@/scripts/banda-curva";
+  iniciarBandas();
+</script>
+
+<style>
+  .banda { position: relative; overflow: hidden; container-type: size; }
+  .banda :global(.banda-escena) { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.6s var(--ease-out); }
+  .banda :global(.banda-escena.lista) { opacity: 1; }
+  .banda :global(.banda-tira) { position: absolute; top: 0; overflow: hidden; background: var(--linea); }
+  .banda :global(.banda-tira img) { position: absolute; top: 0; max-width: none; object-fit: cover; }
+</style>

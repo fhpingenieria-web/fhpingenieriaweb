@@ -1,0 +1,41 @@
+{
+  "energia": {
+    "id": "42690de4-4cff-4938-95e1-b2ddef5a05e0",
+    "titulo": "Free drilling rig, oil field",
+    "autor": null,
+    "licencia": "cc0",
+    "version": "1.0",
+    "fuente": "rawpixel",
+    "proveedor": "rawpixel",
+    "pagina": "https://www.rawpixel.com/image/5906528/photo-image-public-domain-free",
+    "url": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4Njc2MzI0LWltYWdlLWt3dnY2MjEyLmpwZw.jpg",
+    "ancho": 4272,
+    "alto": 2848
+  },
+  "industria": {
+    "id": "252e119f-f571-42d1-81c8-8d7246f2c014",
+    "titulo": "Mechanical room basement Federal Building",
+    "autor": "Carol M Highsmith",
+    "licencia": "cc0",
+    "version": "1.0",
+    "fuente": "rawpixel",
+    "proveedor": "rawpixel",
+    "pagina": "https://www.rawpixel.com/image/434500/free-photo-image-industry-pipes-los-angeles",
+    "url": "https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcGQxOS0zLTM3NzQxYS5qcGc.jpg",
+    "ancho": 6000,
+    "alto": 4000
+  },
+  "agua": {
+    "id": "2659f6ff-5eaa-4ef8-a6be-fe6792b7476c",
+    "titulo": "Water treatment plant",
+    "autor": "usembassynewzealand",
+    "licencia": "cc0",
+    "version": "1.0",
+    "fuente": "rawpixel",
+    "proveedor": "rawpixel",
+    "pagina": "https://www.rawpixel.com/image/10995707/water-treatment-plant",
+    "url": "https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAzL2ZsNTI1NTU5ODkzNzktaW1hZ2UuanBn.jpg",
+    "ancho": 5472,
+    "alto": 3648
+  }
+}

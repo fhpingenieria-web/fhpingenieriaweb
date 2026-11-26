@@ -1,0 +1,85 @@
+---
+import T from "@/components/ui/T.astro";
+import { inicio } from "@/lib/textos";
+import { Picture } from "astro:assets";
+import { getCollection } from "astro:content";
+import AConfirmar from "@/components/ui/AConfirmar.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+// Fondo ya desenfocado en el archivo (no con CSS): mismo aspecto, sin costo de render al hacer scroll
+import fondo from "@/assets/metodo-fondo.jpg";
+
+const { sinCabecera = false } = Astro.props as { sinCabecera?: boolean };
+const pasos = (await getCollection("metodo")).sort((a, b) => a.data.orden - b.data.orden);
+---
+
+<section class="met" id="metodo" aria-label={inicio.metodo.titulo}>
+  <!-- Fondo: foto muy desenfocada, solo como materia para el vidrio -->
+  <div class="met-fondo" aria-hidden="true">
+    <Picture src={fondo} alt="" formats={["avif", "webp"]} widths={[640]} sizes="100vw" loading="lazy" fetchpriority="low" decoding="async" />
+  </div>
+  <div class="contenedor seccion met-in">
+    {!sinCabecera && <CabSeccion
+      id="met-titulo"
+      titulo={inicio.metodo.titulo}
+      bajada={inicio.metodo.bajada}
+      tk="inicio.metodo.titulo"
+      bk="inicio.metodo.bajada"
+    />}
+
+    <AConfirmar nota="Método a confirmar con Facundo">
+      <ol class="met-lista" role="list">
+        {
+          pasos.map((p) => (
+            <li id={p.id}>
+              <a class="met-paso vidrio" href={`/metodo/${p.id}/`}>
+                <h3 class="met-nombre"><T k={`metodo.${p.id}.nombre`} v={p.data.nombre} /></h3>
+                <p><T k={`metodo.${p.id}.descripcion`} v={p.data.descripcion} /></p>
+                <span class="met-enlace">Ver etapa <span aria-hidden="true">→</span></span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </AConfirmar>
+  </div>
+</section>
+
+<style>
+  .met { position: relative; overflow: hidden; isolation: isolate; background: var(--banda); }
+  /* Sobre la foto desenfocada el grafito queda justo (4,4:1): la bajada va en tinta */
+  .met :global(.cab-bajada) { color: var(--tinta); }
+  .met-fondo { position: absolute; inset: 0; z-index: -1; }
+  .met-fondo :global(picture), .met-fondo :global(img) { width: 100%; height: 100%; }
+  .met-fondo :global(img) { object-fit: cover; opacity: 0.55; }
+  .met-in { position: relative; }
+
+  .met-lista { display: grid; gap: var(--s-3); counter-reset: paso; }
+  .met-lista > li { scroll-margin-top: calc(60px + var(--s-5)); }
+  .met-paso {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+    height: 100%;
+    padding: var(--s-5);
+    border-radius: var(--r-panel);
+    color: inherit;
+    text-decoration: none;
+    transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out);
+  }
+  .met-paso:hover, .met-paso:focus-visible { transform: translateY(-3px); box-shadow: 0 20px 44px -28px rgb(10 31 63 / 0.52); }
+  .met-paso > * { position: relative; z-index: 2; }
+  .met-nombre { font-size: var(--t-1); font-weight: 560; letter-spacing: -0.012em; line-height: 1.2; }
+  .met-paso p { color: var(--grafito); font-size: var(--t-small); max-width: 36ch; }
+  .met-enlace { align-self: end; padding-top: var(--s-3); color: var(--senal-texto); font-size: var(--t-small); font-weight: 650; }
+
+  @media (min-width: 768px) {
+    .met-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1024px) {
+    .met-lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+    .met-paso { min-height: 200px; padding: var(--s-6) var(--s-5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .met-paso { transition: none; }
+  }
+</style>

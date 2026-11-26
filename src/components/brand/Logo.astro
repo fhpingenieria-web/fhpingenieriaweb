@@ -1,0 +1,80 @@
+---
+/**
+ * Logo de FHP: símbolo + palabra y, opcionalmente, el descriptor (contornos generados por scripts/build-marca.mjs).
+ * Los colores salen de variables CSS: `--logo-*` (ver .logo y .logo-oscuro), así la cabecera puede cambiar de tono al bajar.
+ */
+import marca from "./marca.json";
+
+interface Props {
+  alto?: number;
+  /** Muestra "Ingeniería y Consultoría" a la derecha */
+  descriptor?: boolean;
+  /** Versión para fondos oscuros */
+  oscuro?: boolean;
+  class?: string;
+  titulo?: string;
+}
+const { alto = 44, descriptor = false, oscuro = false, class: className, titulo = "FHP Ingeniería y Consultoría" } = Astro.props;
+
+const { simbolo: s, palabra, desc1, desc2, cap } = marca;
+const esc = 250 / cap;
+const xP = s.ancho + 110;
+const yBase = s.alto / 2 + 125;
+const finP = xP + palabra.ancho * esc;
+const xF = finP + 70;
+const xD = xF + 70;
+const escD = 86 / cap;
+const ancho = Math.ceil(descriptor ? xD + Math.max(desc1.ancho, desc2.ancho) * escD : finP);
+// Identificador único por instancia: los degradados se referencian por id
+const id = `lg${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<svg
+  class:list={["logo", { "logo-oscuro": oscuro }, className]}
+  viewBox={`0 0 ${ancho} ${s.alto}`}
+  height={alto}
+  width={Math.round((ancho * alto) / s.alto)}
+  role="img"
+  aria-label={titulo}
+>
+  <defs>
+    <linearGradient id={`${id}a`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--logo-a1)" /><stop offset="1" stop-color="var(--logo-a2)" /></linearGradient>
+    <linearGradient id={`${id}b`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--logo-b1)" /><stop offset="1" stop-color="var(--logo-b2)" /></linearGradient>
+    <linearGradient id={`${id}d`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--logo-d1)" /><stop offset="1" stop-color="var(--logo-d2)" /></linearGradient>
+  </defs>
+  <polygon points={s.a} fill={`url(#${id}a)`} />
+  <polygon points={s.b} fill={`url(#${id}b)`} />
+  <polygon points={s.c} fill="var(--logo-c)" />
+  <polygon points={s.d} fill={`url(#${id}d)`} />
+  <path transform={`translate(${xP} ${yBase}) scale(${esc})`} d={palabra.d} fill="var(--logo-texto)" />
+  {
+    descriptor && (
+      <>
+        <rect x={xF} y={s.alto / 2 - 125} width="6" height="250" fill="var(--logo-texto)" />
+        <path transform={`translate(${xD} ${s.alto / 2 - 16}) scale(${escD})`} d={desc1.d} fill="var(--logo-sec)" />
+        <path transform={`translate(${xD} ${s.alto / 2 + 100}) scale(${escD})`} d={desc2.d} fill="var(--logo-sec)" />
+      </>
+    )
+  }
+</svg>
+
+<style is:global>
+  .logo {
+    display: block;
+    overflow: visible;
+    --logo-a1: #1a5aa8; --logo-a2: #0a2a5e;
+    --logo-b1: #0b3d91; --logo-b2: #0a2750;
+    --logo-c: #0a2750;
+    --logo-d1: #5da3df; --logo-d2: #2a78c0;
+    --logo-texto: #0a1f3f; --logo-sec: #4b5563;
+  }
+  .logo-oscuro,
+  .cabecera-sobre .cabecera-logo .logo,
+  .cabecera.con-fondo .cabecera-logo .logo {
+    --logo-a1: #4c9ae0; --logo-a2: #1c62b8;
+    --logo-b1: #ffffff; --logo-b2: #b9c3cf;
+    --logo-c: #8fb9e3;
+    --logo-d1: #3f8fcc; --logo-d2: #1e63b5;
+    --logo-texto: #ffffff; --logo-sec: #c7d3e2;
+  }
+</style>

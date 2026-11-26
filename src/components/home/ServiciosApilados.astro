@@ -1,0 +1,175 @@
+---
+/**
+ * Servicios del inicio: una foto grande por servicio con el texto encima.
+ * En escritorio cada panel queda fijo y el siguiente sube tapándolo (sticky, sin JS); en celular y tablet se apilan con scroll normal.
+ * El texto va donde no tapa caras ni el motivo principal de cada foto.
+ */
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import { getCollection } from "astro:content";
+import Icon from "@/components/ui/Icon.astro";
+import T from "@/components/ui/T.astro";
+import { inicio } from "@/lib/textos";
+import { creditosServicios } from "@/data/creditos";
+
+const servicios = (await getCollection("servicios")).sort((a, b) => a.data.orden - b.data.orden);
+const fotos = import.meta.glob<{ default: ImageMetadata }>("/src/assets/servicios/*.jpg", { eager: true });
+const corto = (s: (typeof servicios)[number]) => s.data.nombreCorto;
+const ubicacion: Record<string, { pos: "abajo-der" | "abajo-izq" | "arriba-izq" | "centro-izq"; foco: string }> = {
+  "consultoria-de-ingenieria": { pos: "abajo-der", foco: "62% 50%" },
+  "calculo-y-evaluacion-tecnica": { pos: "abajo-der", foco: "100% 50%" },
+  "inspeccion-tecnica-de-obras": { pos: "arriba-izq", foco: "66% 45%" },
+  "seguimiento-de-proyectos": { pos: "abajo-izq", foco: "60% 30%" },
+  "control-documental": { pos: "centro-izq", foco: "45% 50%" },
+};
+---
+
+<div class="sa" data-apilados>
+  <!-- Índice: muestra en qué servicio estás y permite saltar a otro (solo en escritorio) -->
+  <nav class="sa-indice" aria-label="Servicios">
+    <div class="sa-indice-barra">
+    <ol role="list" class="contenedor">
+      {
+        servicios.map((s, i) => (
+          <li><a href={`/servicios/${s.id}/`} data-indice={i} aria-current={i === 0 ? "true" : undefined}><T k={`servicios.${s.id}.nombreCorto`} v={corto(s)} /></a></li>
+        ))
+      }
+    </ol>
+    </div>
+  </nav>
+  {
+    servicios.map((s, i) => {
+      const u = ubicacion[s.id] ?? { pos: "abajo-izq" as const, foco: "50% 50%" };
+      return (
+        <article class:list={["sa-panel", { "es-actual": i === 0 }]} data-panel data-pos={u.pos} style={`--foco: ${u.foco}; z-index: ${i + 1}`} aria-labelledby={`sa-${s.id}`}>
+          <Picture class="sa-foto" src={fotos[`/src/assets/servicios/${s.id}.jpg`]!.default} alt={creditosServicios[s.id]!.descripcion} formats={["avif", "webp"]} widths={[640, 960, 1400, 2000]} sizes="100vw" loading="lazy" fetchpriority="low" decoding="async" />
+          <div class="contenedor sa-marco">
+            <div class="sa-texto">
+              <h3 id={`sa-${s.id}`} class="sa-titulo"><T k={`servicios.${s.id}.titulo`} v={s.data.titulo} /></h3>
+              <p class="sa-resumen"><T k={`servicios.${s.id}.resumen`} v={s.data.resumen} /></p>
+              <a class="sa-enlace" href={`/servicios/${s.id}/`}><T k="inicio.enlaceServicio" v={inicio.enlaceServicio} /> <Icon name="arrow-right" size={18} /></a>
+            </div>
+          </div>
+        </article>
+      );
+    })
+  }
+</div>
+
+<script>
+  // Escritorio: marca en el índice el servicio que está a la vista, y el índice salta a cada uno.
+  const raiz = document.querySelector<HTMLElement>("[data-apilados]");
+  if (raiz) {
+    // Las fotos se piden y se decodifican antes de llegar a la sección, para que aparezcan ya listas al subir cada panel
+    const anticipo = new IntersectionObserver(([e]) => {
+      if (!e?.isIntersecting) return;
+      anticipo.disconnect();
+      raiz.querySelectorAll<HTMLImageElement>(".sa-panel img").forEach((img) => {
+        img.loading = "eager";
+        img.decode().catch(() => {});
+      });
+    }, { rootMargin: "150% 0px" });
+    anticipo.observe(raiz);
+
+    const paneles = [...raiz.querySelectorAll<HTMLElement>("[data-panel]")];
+    const enlaces = [...raiz.querySelectorAll<HTMLAnchorElement>("[data-indice]")];
+    const apila = matchMedia("(min-width: 1024px)");
+    const inicio = () => raiz.getBoundingClientRect().top + scrollY;
+    // Cada panel ocupa su alto más un tramo de lectura (el margen inferior), durante el que queda quieto
+    const alto = () => paneles[0]!.offsetHeight;
+    const lectura = () => parseFloat(getComputedStyle(paneles[0]!).marginBottom) || 0;
+    let actual = 0;
+    let pendiente = false;
+    const marcar = () => {
+      pendiente = false;
+      if (!apila.matches) return;
+      // El siguiente pasa a ser el actual cuando ya cubre la mitad de la pantalla
+      const n = Math.min(paneles.length - 1, Math.max(0, Math.floor((scrollY - inicio() - lectura() - alto() / 2) / (alto() + lectura())) + 1));
+      if (n === actual) return;
+      actual = n;
+      paneles.forEach((p, i) => p.classList.toggle("es-actual", i === n));
+      enlaces.forEach((a, i) => (i === n ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current")));
+    };
+    // Solo escucha el scroll mientras la sección está cerca de la pantalla
+    const alMover = () => { if (!pendiente) { pendiente = true; requestAnimationFrame(marcar); } };
+    new IntersectionObserver(([e]) => {
+      if (e?.isIntersecting) { addEventListener("scroll", alMover, { passive: true }); marcar(); }
+      else removeEventListener("scroll", alMover);
+    }).observe(raiz);
+    enlaces.forEach((a, i) =>
+      a.addEventListener("click", (e) => {
+        if (!apila.matches || (e.target as HTMLElement).isContentEditable) return;
+        e.preventDefault();
+        scrollTo({ top: inicio() + i * (alto() + lectura()) + 1, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      }),
+    );
+  }
+</script>
+
+<style>
+  .sa { position: relative; }
+  .sa-indice { display: none; }
+  .sa-panel { position: relative; isolation: isolate; min-height: 82svh; display: grid; color: #fff; background: var(--tinta); overflow: hidden; }
+  .sa-panel :global(picture) { position: absolute; inset: 0; z-index: -2; }
+  .sa-panel :global(.sa-foto) { width: 100%; height: 100%; object-fit: cover; object-position: var(--foco, 50% 50%); filter: var(--foto-filtro); transition: transform var(--dur-3) var(--ease-out); }
+  .sa-panel:hover :global(.sa-foto) { transform: scale(1.02); }
+  /* Celular y tablet: el texto va abajo, sobre una sombra que sube desde el borde */
+  .sa-panel::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgb(11 45 100 / 0.16) 30%, rgb(6 18 40 / 0.88)); }
+  .sa-marco { display: flex; align-items: flex-end; padding-block: var(--s-7); width: 100%; }
+  .sa-texto { display: grid; justify-items: start; gap: var(--s-4); max-width: 34rem; text-shadow: 0 1px 18px rgb(6 18 40 / 0.5); }
+  .sa-titulo { font-size: var(--t-4); font-weight: 600; line-height: 1.08; letter-spacing: -0.025em; text-wrap: balance; }
+  .sa-resumen { font-size: var(--t-0); font-weight: 500; line-height: 1.55; text-wrap: pretty; }
+  .sa-enlace { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 600; color: #fff; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.4em; text-decoration-color: rgb(255 255 255 / 0.55); transition: text-decoration-color var(--dur-2) var(--ease-out); }
+  /* Todo el panel abre el servicio: el enlace se estira sobre él (en modo edición no, para poder tocar los textos) */
+  .sa-enlace::before { content: ""; position: absolute; inset: 0; }
+  :global(.editando) .sa-enlace::before { display: none; }
+  .sa-panel:hover .sa-enlace { text-decoration-color: #fff; }
+  .sa-enlace:focus-visible { outline: none; }
+  .sa-enlace:focus-visible::before { outline: 3px solid #fff; outline-offset: -8px; }
+  .sa-enlace :global(.icon) { transition: transform var(--dur-2) var(--ease-out); }
+  .sa-panel:hover .sa-enlace :global(.icon) { transform: translateX(4px); }
+
+  /* Escritorio: pantalla completa y apilado; la sombra nace del rincón donde va el texto */
+  @media (min-width: 1024px) {
+    /* El margen es el tramo de lectura: el panel queda quieto hasta que recién ahí entra el siguiente */
+    .sa { display: flow-root; }
+    .sa-panel { position: sticky; top: 0; height: 100svh; min-height: 620px; margin-bottom: 55svh; }
+    /* El último no lleva tramo de lectura: ningún panel lo tapa, y ese margen se vería como un hueco vacío */
+    .sa-panel:last-child { margin-bottom: 0; }
+    .sa-panel + .sa-panel { box-shadow: 0 -24px 48px -24px rgb(6 18 40 / 0.5); }
+    .sa-panel::after { --sx: 0%; --sy: 100%; background: radial-gradient(ellipse 72% 92% at var(--sx) var(--sy), rgb(6 18 40 / 0.86) 0 32%, transparent 82%), linear-gradient(rgb(11 45 100 / 0.16), rgb(11 45 100 / 0.16)); }
+    .sa-marco { padding-block: var(--s-8) calc(var(--s-7) + 40px); }
+    .sa-texto { max-width: 42rem; }
+    .sa-titulo { font-size: var(--t-5); }
+
+    /* Índice: capa del alto de toda la sección, con la barra fina pegada al borde inferior.
+       Así no ocupa lugar en el flujo y, al terminar los servicios, se va junto con el último panel. */
+    .sa-indice { display: block; position: absolute; inset: 0; z-index: 20; pointer-events: none; }
+    .sa-indice-barra { position: sticky; top: calc(100svh - 40px); height: 40px; background: rgb(6 18 40 / 0.86); pointer-events: auto; }
+    .sa-indice ol { height: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .sa-indice a { position: relative; display: flex; align-items: center; height: 100%; padding-right: var(--s-3); font-size: 0.8125rem; font-weight: 500; line-height: 1.2; color: rgb(255 255 255 / 0.72); text-decoration: none; transition: color var(--dur-2) var(--ease-out); }
+    .sa-indice a::before { content: ""; position: absolute; left: 0; right: var(--s-3); bottom: 0; height: 3px; background: rgb(255 255 255 / 0.22); }
+    .sa-indice a::after { content: ""; position: absolute; left: 0; right: var(--s-3); bottom: 0; height: 3px; background: var(--senal); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-3) var(--ease-out); }
+    .sa-indice a:hover, .sa-indice a[aria-current] { color: #fff; }
+    .sa-indice a[aria-current] { font-weight: 600; }
+    .sa-indice a[aria-current]::after { transform: scaleX(1); }
+
+    /* Entrada del texto: aparece suave cuando su panel llega a la pantalla */
+    :global(html.js) .sa-panel:not(.es-actual) .sa-texto { opacity: 0; transform: translateY(20px); }
+    .sa-texto { transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+    .sa-resumen { font-size: var(--t-1); }
+    [data-pos="abajo-izq"]::after { --sx: 0%; --sy: 100%; }
+    [data-pos="abajo-der"]::after { --sx: 100%; --sy: 100%; }
+    [data-pos="arriba-izq"]::after { --sx: 0%; --sy: 18%; }
+    [data-pos="centro-izq"]::after { --sx: 0%; --sy: 50%; }
+    [data-pos="abajo-der"] .sa-marco { justify-content: flex-end; }
+    [data-pos="abajo-der"] .sa-texto { justify-items: end; text-align: right; }
+    [data-pos="arriba-izq"] .sa-marco { align-items: flex-start; padding-top: var(--s-9); }
+    [data-pos="centro-izq"] .sa-marco { align-items: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sa-enlace, .sa-enlace :global(.icon), .sa-texto, .sa-indice a, .sa-indice a::after, .sa-panel :global(.sa-foto) { transition: none; }
+    .sa-panel:hover :global(.sa-foto) { transform: none; }
+    :global(html.js) .sa-panel:not(.es-actual) .sa-texto { opacity: 1; transform: none; }
+  }
+</style>

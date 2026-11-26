@@ -1,0 +1,21 @@
+# Textos de las páginas internas.
+servicios:
+  tituloGoogle: Servicios de ingeniería, inspección y control documental
+  descripcionGoogle: Consultoría de ingeniería, cálculo y evaluación técnica, inspección técnica de obras, seguimiento de proyectos y control documental para proyectos industriales y de infraestructura.
+  titulo: Servicios
+  bajada: Cinco servicios que acompañan el proyecto antes de ejecutar, durante la obra y hasta la documentación de cierre.
+servicio:
+  tituloIncluye: Qué incluye
+  tituloConviene: Cuándo conviene aplicarla
+  tituloEntregables: Entregables típicos
+  notaEntregables: El alcance y los entregables se acuerdan con cada cliente antes de empezar.
+  tituloPreguntas: Preguntas frecuentes
+  siguiente: Siguiente servicio
+  actualizado: "Última actualización:"
+contacto:
+  descripcionGoogle: Contanos sobre tu proyecto. Consultas por WhatsApp, teléfono o correo. FHP Consultora e Ingeniería, Argentina y Mercosur.
+noEncontrada:
+  titulo: Esta página no existe o cambió de dirección.
+  bajada: Podés volver al inicio o ver los servicios.
+  botonInicio: Ir al inicio
+  enlaceServicios: Ver servicios

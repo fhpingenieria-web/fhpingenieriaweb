@@ -1,0 +1,24 @@
+# Política de privacidad. En los párrafos se pueden usar {responsable}, {email} y {telefono}:
+# el sitio los reemplaza por los datos actuales.
+descripcionGoogle: Cómo FHP Consultora e Ingeniería trata los datos enviados a través del sitio, y créditos de las imágenes ilustrativas.
+titulo: Política de privacidad
+secciones:
+  - titulo: Responsable
+    parrafos:
+      - El responsable del tratamiento de los datos es {responsable}. Podés comunicarte por correo a {email} o al teléfono {telefono}.
+  - titulo: Qué datos recibimos y para qué
+    parrafos:
+      - Cuando nos escribís por WhatsApp, por teléfono o por correo, recibimos los datos que vos decidís compartir, como tu nombre, tu empresa, tus datos de contacto y la descripción de tu consulta. Los usamos únicamente para responder esa consulta y, si corresponde, preparar una propuesta. No los vendemos ni los cedemos a terceros con fines comerciales.
+  - titulo: Conservación
+    parrafos:
+      - Conservamos los datos mientras sean necesarios para atender la consulta y la relación profesional que pueda surgir.
+  - titulo: Tus derechos
+    parrafos:
+      - Podés pedir el acceso, la rectificación, la actualización o la supresión de tus datos en cualquier momento, escribiendo a los canales indicados arriba, conforme a la Ley N.º 25.326 de Protección de los Datos Personales.
+      - La Agencia de Acceso a la Información Pública, en su carácter de Órgano de Control de la Ley N.º 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.
+  - titulo: Cookies y medición
+    parrafos:
+      - Este sitio no usa cookies de publicidad ni de seguimiento.
+creditos:
+  titulo: Créditos de imágenes e íconos
+  texto: Las fotografías del sitio son ilustrativas y no muestran obras, instalaciones ni personas vinculadas a FHP. Se usan bajo la licencia de Unsplash.

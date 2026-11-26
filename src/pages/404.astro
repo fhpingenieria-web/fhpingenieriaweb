@@ -1,0 +1,25 @@
+---
+import T from "@/components/ui/T.astro";
+import Base from "@/layouts/Base.astro";
+import Icon from "@/components/ui/Icon.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import { paginas } from "@/lib/textos";
+const nf = paginas.noEncontrada;
+---
+
+<Base titulo="Página no encontrada" descripcion="La página que buscás no existe o cambió de dirección." noindex>
+  <section class="nf contenedor seccion">
+    <CabSeccion nivel="h1" id="nf-titulo" titulo={nf.titulo} bajada={nf.bajada} tk="paginas.noEncontrada.titulo" bk="paginas.noEncontrada.bajada">
+    <div class="nf-acciones">
+      <a class="btn" href="/"><T k="paginas.noEncontrada.botonInicio" v={nf.botonInicio} /> <Icon name="arrow-right" size={18} /></a>
+      <a class="enlace" href="/servicios/"><T k="paginas.noEncontrada.enlaceServicios" v={nf.enlaceServicios} /> <Icon name="arrow-up-right" size={16} /></a>
+    </div>
+    </CabSeccion>
+  </section>
+</Base>
+
+<style>
+  .nf { min-height: 60vh; display: grid; align-content: center; }
+  .nf-acciones { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-6); align-items: center; margin-top: var(--s-4); }
+
+</style>

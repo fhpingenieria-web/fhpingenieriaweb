@@ -1,0 +1,58 @@
+---
+import T from "@/components/ui/T.astro";
+import Base from "@/layouts/Base.astro";
+import CabSeccion from "@/components/ui/CabSeccion.astro";
+import Migas from "@/components/layout/Migas.astro";
+import AConfirmar from "@/components/ui/AConfirmar.astro";
+import { empresa } from "@/data/empresa";
+import { privacidad, sitio, rellenar } from "@/lib/textos";
+import { creditosHero, creditosServicios, creditosSectores, creditosTemas } from "@/data/creditos";
+
+const creditos = [...creditosHero, ...Object.values(creditosServicios), ...Object.values(creditosSectores), ...creditosTemas];
+const unicos = creditos.filter((c, i) => creditos.findIndex((x) => x.pagina === c.pagina) === i);
+const responsable = (empresa.legal.razonSocial ?? empresa.nombre) + (empresa.legal.cuit ? `, CUIT ${empresa.legal.cuit}` : "");
+const datos = { responsable, email: empresa.contacto.email.valor, telefono: empresa.contacto.telefono.valor };
+---
+
+<Base titulo={`${privacidad.titulo} y créditos`} descripcion={privacidad.descripcionGoogle}>
+  <article class="legal contenedor seccion">
+    <Migas items={[{ nombre: "Inicio", href: "/" }, { nombre: sitio.pie.privacidad }]} />
+    <CabSeccion nivel="h1" id="legal-titulo" titulo={privacidad.titulo} tk="privacidad.titulo" class="legal-cab" />
+
+    <div class="grilla"><div class="legal-cuerpo">
+    <AConfirmar nota="Texto a revisar por un asesor legal antes de publicar">
+      <div class="legal-texto">
+        {
+          privacidad.secciones.map((sec, i) => (
+            <>
+              <h2><T k={`privacidad.secciones.${i}.titulo`} v={sec.titulo} /></h2>
+              {sec.parrafos.map((p) => <p>{rellenar(p, datos)}</p>)}
+            </>
+          ))
+        }
+      </div>
+    </AConfirmar>
+
+    <section id="imagenes" class="legal-creditos" aria-labelledby="creditos-titulo">
+      <h2 id="creditos-titulo"><T k="privacidad.creditos.titulo" v={privacidad.creditos.titulo} /></h2>
+      <p><T k="privacidad.creditos.texto" v={privacidad.creditos.texto} /></p>
+      <p>Íconos: <a href="https://www.flaticon.com/uicons" target="_blank" rel="noopener">Uicons by Flaticon</a>.</p>
+      <p>Video del inicio: tomas de <a href="https://mixkit.co/" target="_blank" rel="noopener">Mixkit</a>, bajo la licencia gratuita de Mixkit.</p>
+      <ul role="list">
+        {unicos.map((c) => <li>{c.descripcion}. Foto: <a href={c.pagina} target="_blank" rel="noopener">{c.autor}</a></li>)}
+      </ul>
+    </section>
+    </div></div>
+  </article>
+</Base>
+
+<style>
+  .legal :global(.legal-cab) { margin-top: var(--s-6); }
+  .legal-texto h2, .legal-creditos h2 { margin: var(--s-7) 0 var(--s-3); font-size: var(--t-1); font-weight: 560; }
+  .legal-texto > h2:first-child { margin-top: 0; }
+  .legal-texto p, .legal-creditos p { color: var(--grafito); margin-bottom: var(--s-4); max-width: 60ch; }
+  .legal-creditos { margin-top: var(--s-9); padding-top: var(--s-4); border-top: var(--filete) solid rgb(14 18 21 / 0.12); }
+  .legal-creditos li { padding: var(--s-2) 0; border-bottom: var(--filete) solid var(--linea-suave); font-size: var(--t-small); }
+  @media (min-width: 768px) { .legal-cuerpo { grid-column: 4 / -1; } }
+  @media (min-width: 1024px) { .legal-cuerpo { grid-column: 3 / 10; } }
+</style>

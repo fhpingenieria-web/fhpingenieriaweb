@@ -1,0 +1,82 @@
+---
+/**
+ * Página temática del menú y de la portada: banner con foto y palabra grande, desarrollo y contacto al final.
+ * La foto es src/assets/temas/<tema>.jpg.
+ */
+import { Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import Base from "@/layouts/Base.astro";
+import T from "@/components/ui/T.astro";
+import Contacto from "@/components/home/Contacto.astro";
+import { temas } from "@/lib/textos";
+
+type Tema = "experiencia" | "compromiso" | "sustentabilidad" | "equipo" | "institucional" | "sectores" | "metodo";
+interface Props {
+  tema: Tema;
+}
+const { tema } = Astro.props;
+const d = temas[tema];
+const fotos = import.meta.glob<{ default: ImageMetadata }>("/src/assets/temas/*.jpg", { eager: true });
+const foto = fotos[`/src/assets/temas/${tema}.jpg`]!.default;
+const bloques = d.bloques ?? [];
+---
+
+<Base titulo={d.palabra} descripcion={d.descripcionGoogle} imagen={`/og/${tema}.png`} cabeceraSobreImagen>
+  <section class="pt-banner">
+    <Picture class="pt-foto" src={foto} alt="" formats={["avif", "webp"]} widths={[640, 960, 1400, 2000]} sizes="100vw" loading="eager" fetchpriority="high" decoding="async" />
+    <div class="pt-banner-texto contenedor">
+      <h1 class="pt-palabra" style={`--letras: ${d.palabra.length}`}><T k={`temas.${tema}.palabra`} v={d.palabra} /></h1>
+      <p class="pt-bajada"><T k={`temas.${tema}.bajada`} v={d.bajada} /></p>
+    </div>
+  </section>
+
+  <section class="contenedor pt-intro" aria-label={d.palabra}>
+    {d.intro.map((p, i) => <p class:list={{ "pt-intro-primero": i === 0 }}><T k={`temas.${tema}.intro.${i}`} v={p} /></p>)}
+  </section>
+
+  <slot />
+
+  {
+    bloques.length > 0 && (
+      <section class="contenedor pt-seccion-bloques" aria-label={d.palabra}>
+        <div class="pt-bloques">
+          {bloques.map((b, i) => (
+            <div class="pt-bloque">
+              <h2 class="pt-bloque-titulo"><T k={`temas.${tema}.bloques.${i}.titulo`} v={b.titulo} /></h2>
+              <p><T k={`temas.${tema}.bloques.${i}.texto`} v={b.texto} /></p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <Contacto />
+</Base>
+
+<style>
+  .pt-banner { position: relative; isolation: isolate; min-height: clamp(440px, 68svh, 680px); display: grid; place-items: center; overflow: hidden; color: #fff; background: var(--tinta); }
+  .pt-banner :global(picture) { position: absolute; inset: 0; z-index: -2; }
+  .pt-banner :global(.pt-foto) { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; filter: var(--foto-filtro); }
+  .pt-banner::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 70% 50% at 50% 58%, rgb(6 18 40 / 0.36), transparent 100%), linear-gradient(180deg, rgb(6 18 40 / 0.5), rgb(6 18 40 / 0.42)); }
+  .pt-banner-texto { grid-area: 1 / 1; display: grid; justify-items: center; gap: var(--s-4); text-align: center; padding-top: calc(var(--franja-h) + var(--header-h)); padding-bottom: var(--s-5); text-shadow: 0 1px 24px rgb(6 18 40 / 0.5); }
+  .pt-palabra { font-size: min(clamp(2.5rem, 0.9rem + 5.6vw, 5.5rem), calc(90vw / (var(--letras) * 0.76))); font-weight: 600; line-height: 1.05; letter-spacing: 0.01em; text-transform: uppercase; overflow-wrap: anywhere; }
+  .pt-bajada { font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem); font-weight: 500; line-height: 1.5; max-width: 50ch; text-wrap: pretty; }
+
+  .pt-intro { display: grid; gap: var(--s-5); padding-block: var(--seccion) var(--s-7); }
+  .pt-intro p { max-width: 68ch; font-size: 1.125rem; line-height: 1.7; color: var(--grafito); }
+  .pt-intro .pt-intro-primero { max-width: 40ch; font-size: var(--t-2); font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; color: var(--tinta); }
+  @media (min-width: 1024px) {
+    .pt-intro { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); column-gap: var(--s-8); align-content: start; }
+    .pt-intro .pt-intro-primero { grid-row: 1 / span 4; }
+    .pt-intro p:not(.pt-intro-primero) { grid-column: 2; }
+  }
+  .pt-seccion-bloques { padding-block: var(--s-5) var(--seccion); }
+  .pt-bloques { display: grid; gap: var(--s-6); }
+  .pt-bloque { display: grid; gap: var(--s-3); align-content: start; padding-top: var(--s-4); border-top: var(--filete-fuerte) solid var(--senal); }
+  .pt-bloque-titulo { font-size: var(--t-2); font-weight: 600; line-height: 1.2; letter-spacing: -0.015em; }
+  .pt-bloque p { color: var(--grafito); max-width: 56ch; line-height: 1.65; }
+  @media (min-width: 768px) {
+    .pt-bloques { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-7) var(--s-7); }
+  }
+</style>

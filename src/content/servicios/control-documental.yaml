@@ -1,0 +1,31 @@
+titulo: Consultoría de Ingeniería
+nombreCorto: Proyectos ejecutivos
+orden: 5
+etapa: transversal
+resumen: Organización, revisión y seguimiento de la documentación técnica, desde la primera versión hasta el registro de cierre.
+definicion: >-
+  El control documental de proyectos es la organización, revisión y seguimiento de la documentación técnica: entregables, versiones, observaciones y registros de cierre. Su objetivo es que cada documento esté identificado, en su versión vigente y trazable, para que el proyecto pueda auditarse y cerrarse sin vacíos.
+metaDescripcion: Control documental de proyectos industriales y de infraestructura. Versiones, entregables, observaciones y registros de cierre con trazabilidad completa.
+incluye:
+  - Organización de la documentación técnica del proyecto
+  - Control de versiones y revisiones
+  - Seguimiento de entregables y observaciones
+  - Registros de cierre según el alcance contratado
+situaciones:
+  - Cuando varios actores generan documentos y no está claro cuál es la versión vigente.
+  - Cuando hay observaciones emitidas sin seguimiento de su respuesta.
+  - Cuando se acerca el cierre y necesitás la documentación completa y trazable.
+entregables:
+  aConfirmar: true
+  items:
+    - Listado maestro de documentos
+    - Registro de revisiones y observaciones
+    - Documentación de cierre del proyecto
+faq:
+  - pregunta: ¿Qué es la trazabilidad documental?
+    respuesta: >-
+      Es la posibilidad de reconstruir la historia de cada documento: quién lo emitió, qué versiones tuvo, qué observaciones recibió y cómo se resolvieron. Es la base para auditar un proyecto y para cerrarlo.
+  - pregunta: ¿En qué momento del proyecto conviene empezar?
+    respuesta: >-
+      Lo más eficiente es empezar junto con el proyecto, cuando se emiten los primeros documentos. También puede incorporarse durante la ejecución para ordenar lo existente y llegar al cierre con la documentación completa.
+actualizado: 2026-10-22

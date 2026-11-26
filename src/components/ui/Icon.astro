@@ -1,0 +1,50 @@
+---
+/**
+ * Íconos Flaticon UIcons (Thin Straight + Brands), una sola familia en todo el sitio.
+ * SVG autoalojados, generados con scripts/iconos-flaticon.mjs. Crédito: "Uicons by Flaticon".
+ */
+const iconos = import.meta.glob<string>("/src/assets/iconos/*.svg", { query: "?raw", import: "default", eager: true });
+
+export type NombreIcono =
+  | "arrow-right"
+  | "arrow-left"
+  | "arrow-up-right"
+  | "arrow-down-right"
+  | "whatsapp"
+  | "phone"
+  | "envelope"
+  | "menu"
+  | "x"
+  | "plus"
+  | "paper-plane"
+  | "planos"
+  | "consultoria-de-ingenieria"
+  | "calculo-y-evaluacion-tecnica"
+  | "inspeccion-tecnica-de-obras"
+  | "seguimiento-de-proyectos"
+  | "control-documental"
+  | "energia"
+  | "industria"
+  | "agua";
+
+interface Props {
+  name: NombreIcono | string;
+  size?: number | string;
+  label?: string;
+  class?: string;
+}
+
+const { name, size = "1.25em", label, class: className } = Astro.props;
+const raw = iconos[`/src/assets/iconos/${name}.svg`];
+if (!raw) throw new Error(`Ícono inexistente: ${name}`);
+
+const attrs = [
+  `width="${size}"`,
+  `height="${size}"`,
+  label ? `role="img" aria-label="${label}"` : `aria-hidden="true" focusable="false"`,
+  className ? `class="icon ${className}"` : `class="icon"`,
+].join(" ");
+const svg = raw.replace("<svg ", `<svg ${attrs} `);
+---
+
+<Fragment set:html={svg} />

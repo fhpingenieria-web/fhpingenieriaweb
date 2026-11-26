@@ -1,0 +1,44 @@
+---
+import T from "@/components/ui/T.astro";
+/**
+ * Franja de respaldo debajo del hero: datos verificables, en tono institucional.
+ * Solo información confirmada en la fuente (ver src/data/empresa.ts).
+ */
+import { inicio } from "@/lib/textos";
+
+const items = inicio.credenciales;
+---
+
+<section class="cred" aria-label="Respaldo profesional">
+  <ul role="list" class="contenedor cred-lista">
+    {
+      items.map((x, i) => (
+        <li>
+          <p class="cred-dato"><T k={`inicio.credenciales.${i}.dato`} v={x.dato} /></p>
+          <p class="cred-detalle"><T k={`inicio.credenciales.${i}.detalle`} v={x.detalle} /></p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .cred { background: var(--superficie); border-bottom: var(--filete) solid var(--linea); }
+  .cred-lista { display: grid; }
+  .cred-lista li { padding: var(--s-6) 0; display: grid; gap: var(--s-2); align-content: start; }
+  .cred-lista li + li { border-top: var(--filete) solid var(--linea); }
+  .cred-dato { font-size: var(--t-1); font-weight: 650; letter-spacing: -0.01em; line-height: 1.25; }
+  .cred-detalle { font-size: var(--t-small); color: var(--grafito); max-width: 32ch; }
+
+  @media (min-width: 768px) {
+    .cred-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--col-gap); }
+    .cred-lista li + li { border-top: 0; }
+    .cred-lista li:nth-child(n + 3) { border-top: var(--filete) solid var(--linea); }
+  }
+  @media (min-width: 1024px) {
+    .cred-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .cred-lista li { padding: var(--s-7) var(--s-5) var(--s-7) 0; }
+    .cred-lista li:nth-child(n + 3) { border-top: 0; }
+    .cred-lista li + li { border-left: var(--filete) solid var(--linea); padding-left: var(--s-5); }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+import "@/styles/global.css";
+import { Font } from "astro:assets";
+import Header from "@/components/layout/Header.astro";
+import Footer from "@/components/layout/Footer.astro";
+import { empresa } from "@/data/empresa";
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  /** JSON-LD ya serializado */
+  schema?: string;
+  imagen?: string;
+  noindex?: boolean;
+  tipo?: "website" | "article";
+  /** La cabecera flota sobre la imagen del hero (solo en el inicio) */
+  cabeceraSobreImagen?: boolean;
+}
+
+const { titulo, descripcion, schema, imagen = "/og-default.png", noindex = false, tipo = "website", cabeceraSobreImagen = false } = Astro.props;
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+// Versión en la URL: WhatsApp y las redes guardan la vista previa; al cambiar el diseño, subir el número
+const ogImage = new URL(imagen, site).href + "?v=7";
+const tituloCompleto = titulo === empresa.nombre ? titulo : `${titulo} | ${empresa.sigla} Consultora e Ingeniería`;
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js");</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <Font cssVariable="--font-montserrat" preload />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a1f3f" />
+    <meta name="color-scheme" content="light only" />
+
+    <meta property="og:type" content={tipo} />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content={empresa.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={tituloCompleto} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="Resumen para modelos de lenguaje" />
+
+    {schema && <script type="application/ld+json" set:html={schema} />}
+    <slot name="head" />
+
+    <!-- Precarga de páginas internas al pasar el cursor (Speculation Rules) -->
+    <script type="speculationrules" is:inline>
+      { "prerender": [{ "where": { "href_matches": "/*" }, "eagerness": "moderate" }] }
+    </script>
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Header sobreImagen={cabeceraSobreImagen} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      // Modo edición de textos: solo se carga con el enlace secreto (?editar=...) o si ya se entró antes en este navegador
+      let editar = new URLSearchParams(location.search).has("editar");
+      try { editar ||= !!localStorage.getItem("fhp-edicion"); } catch {}
+      if (editar) import("../scripts/editor").then((m) => m.iniciarEditor());
+    </script>
+  </body>
+</html>
