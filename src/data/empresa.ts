@@ -95,7 +95,6 @@ export const secciones = {
 export const pendientesGenerales: { item: string; bloquea: "publicacion" | "nada" }[] = [
   { item: "Dominio definitivo (variable SITE_URL)", bloquea: "publicacion" },
   { item: "Razón social y CUIT para el pie legal y la política de privacidad", bloquea: "publicacion" },
-  { item: "Email definitivo (fhp@consultas.com es provisorio y de un dominio ajeno)", bloquea: "publicacion" },
   { item: "Revisión legal de la política de privacidad", bloquea: "publicacion" },
   { item: "Retrato profesional de Facundo", bloquea: "nada" },
   { item: "Matrícula profesional (si es publicable)", bloquea: "nada" },
